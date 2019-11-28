@@ -1,0 +1,192 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+	<GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+	<Configurations>Debug;Release;QA;Produccion;QA_NEXT</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="MIPE\Contracts\**" />
+    <Compile Remove="ScriptData\**" />
+    <EmbeddedResource Remove="MIPE\Contracts\**" />
+    <EmbeddedResource Remove="ScriptData\**" />
+    <None Remove="MIPE\Contracts\**" />
+    <None Remove="ScriptData\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20180315154514_Update004.cs" />
+    <Compile Remove="Migrations\20180315154922_Update005.cs" />
+    <Compile Remove="Migrations\20180315195156_Update007.cs" />
+    <Compile Remove="Migrations\20180315195722_Update007.cs" />
+    <Compile Remove="Migrations\20180315195851_Update007.cs" />
+    <Compile Remove="Migrations\20180315200334_Update007.cs" />
+    <Compile Remove="Migrations\20180315201530_Update007.cs" />
+    <Compile Remove="Migrations\20180315201746_Update007.cs" />
+    <Compile Remove="Migrations\20180317003526_Update013.cs" />
+    <Compile Remove="Migrations\20180317004330_Update013.cs" />
+    <Compile Remove="Migrations\20180317011316_Update001.cs" />
+    <Compile Remove="Migrations\20180317011943_Update001.cs" />
+    <Compile Remove="Migrations\20180317012424_Update001.cs" />
+    <Compile Remove="Migrations\20180317012747_Update001.cs" />
+    <Compile Remove="Migrations\20180319132444_Update002.cs" />
+    <Compile Remove="Migrations\20180319135533_Update002.cs" />
+    <Compile Remove="Migrations\20180319140211_Update002.cs" />
+    <Compile Remove="Migrations\20180319152902_Update002.cs" />
+    <Compile Remove="Migrations\20180319185159_Update003.cs" />
+    <Compile Remove="Migrations\20180319211028_Update004.cs" />
+    <Compile Remove="Migrations\20180320000935_Update001.cs" />
+    <Compile Remove="Migrations\20180320134517_Update004.cs" />
+    <Compile Remove="Migrations\20180320134723_Update004.cs" />
+    <Compile Remove="Migrations\20180320135006_Update004.cs" />
+    <Compile Remove="Migrations\20180320135104_Update004.cs" />
+    <Compile Remove="Migrations\20180320135436_Update004.cs" />
+    <Compile Remove="Migrations\20180320140246_Update004.cs" />
+    <Compile Remove="Migrations\20180320140429_Update004.cs" />
+    <Compile Remove="Migrations\20180320141523_Update004.cs" />
+    <Compile Remove="Migrations\20180320142039_Update004.cs" />
+    <Compile Remove="Migrations\20180320142733_Update004.cs" />
+    <Compile Remove="Migrations\20180320142927_Update004.cs" />
+    <Compile Remove="Migrations\20180320143654_Update004.cs" />
+    <Compile Remove="Migrations\20180320183018_Update012.cs" />
+    <Compile Remove="Migrations\20180320183202_Update012.cs" />
+    <Compile Remove="Migrations\20180320183453_Update012.cs" />
+    <Compile Remove="Migrations\20180320183522_Update012.cs" />
+    <Compile Remove="Migrations\20180320184418_Update012.cs" />
+    <Compile Remove="Migrations\20180320185557_Update012.cs" />
+    <Compile Remove="Migrations\20180320185630_Update012.cs" />
+    <Compile Remove="Migrations\20180320195202_Update014.cs" />
+    <Compile Remove="Migrations\20180320195250_Update014.cs" />
+    <Compile Remove="Migrations\20180320195630_Update014.cs" />
+    <Compile Remove="Migrations\20180320201218_Update014.cs" />
+    <Compile Remove="Migrations\20180320202254_Update014.cs" />
+    <Compile Remove="Migrations\20180320202407_Update014.cs" />
+    <Compile Remove="Migrations\20180320205502_Update016.cs" />
+    <Compile Remove="Migrations\20180320210410_Update017.cs" />
+    <Compile Remove="Migrations\20180320214739_Update018.cs" />
+    <Compile Remove="Migrations\20180320214911_Update018.cs" />
+    <Compile Remove="Migrations\20180320214952_Update018.cs" />
+    <Compile Remove="Migrations\20180321135814_Update001.cs" />
+    <Compile Remove="Migrations\20180321210012_Update004.cs" />
+    <Compile Remove="Migrations\20180321211335_Update002.cs" />
+    <Compile Remove="Migrations\20180322151026_Update003.cs" />
+    <Compile Remove="Migrations\20180322151438_Update003.cs" />
+    <Compile Remove="Migrations\20180322154131_Update004.cs" />
+    <Compile Remove="Migrations\20180322154933_Update004.cs" />
+    <Compile Remove="Migrations\20180322155239_Update004.cs" />
+    <Compile Remove="Migrations\20180322160305_Update005.cs" />
+    <Compile Remove="Migrations\20180322182538_Update007.cs" />
+    <Compile Remove="Migrations\20180322183543_Update001.cs" />
+    <Compile Remove="Migrations\20180322190638_Update003.cs" />
+    <Compile Remove="Migrations\20180322191854_Update004.cs" />
+    <Compile Remove="Migrations\20180322201330_Update004.cs" />
+    <Compile Remove="Migrations\20180322203216_Update001.cs" />
+    <Compile Remove="Migrations\20180322212040_Update001.cs" />
+    <Compile Remove="Migrations\20180323193949_Update009.cs" />
+    <Compile Remove="Migrations\20180323194606_Update009.cs" />
+    <Compile Remove="Migrations\20180323195009_Update009.cs" />
+    <Compile Remove="Migrations\20180323230559_Update010.cs" />
+    <Compile Remove="Migrations\20180328195635_Update013.cs" />
+    <Compile Remove="Migrations\20180328195823_Update013.cs" />
+    <Compile Remove="Migrations\20180328195938_Update013.cs" />
+    <Compile Remove="Migrations\20180328200105_Update013.cs" />
+    <Compile Remove="Migrations\20180328203638_Update014.cs" />
+    <Compile Remove="Migrations\20180402192633_Update016.cs" />
+    <Compile Remove="Migrations\20180402192730_Update016.cs" />
+    <Compile Remove="Migrations\20180404143620_Update025.cs" />
+    <Compile Remove="Migrations\20180406153032_Update028.cs" />
+    <Compile Remove="Migrations\20180406153303_Update028.cs" />
+    <Compile Remove="Migrations\20180411133350_Update034.cs" />
+    <Compile Remove="Migrations\20180416201209_Update039.cs" />
+    <Compile Remove="Migrations\20180419152451_Update044.cs" />
+    <Compile Remove="Migrations\20180420142640_Update046.cs" />
+    <Compile Remove="Migrations\20180420153008_Update047.cs" />
+    <Compile Remove="Migrations\20180423192618_Update049.cs" />
+    <Compile Remove="Migrations\20180423193901_Update049.cs" />
+    <Compile Remove="Migrations\20180423194017_Update049.cs" />
+    <Compile Remove="Migrations\20180423194216_Update049.cs" />
+    <Compile Remove="Migrations\20180423194551_Update049.cs" />
+    <Compile Remove="Migrations\20180423195222_Update049.cs" />
+    <Compile Remove="Migrations\20180423195443_Update049.cs" />
+    <Compile Remove="Migrations\20180423195818_Update049.cs" />
+    <Compile Remove="Migrations\20180423200557_Update049.cs" />
+    <Compile Remove="Migrations\20180423200721_Update049.cs" />
+    <Compile Remove="Migrations\20180425175707_Update050.cs" />
+    <Compile Remove="Migrations\20180427195247_Update060.cs" />
+    <Compile Remove="Migrations\20180503192043_Update066.cs" />
+    <Compile Remove="Migrations\20180503192531_Update066.cs" />
+    <Compile Remove="Migrations\20180504155336_Update069.cs" />
+    <Compile Remove="Migrations\20180508195803_Update76.cs" />
+    <Compile Remove="Migrations\20180509161346_Update77.cs" />
+    <Compile Remove="Migrations\20180509161923_Update77.cs" />
+    <Compile Remove="Migrations\20180509163006_Update78.cs" />
+    <Compile Remove="Migrations\20180509171411_Update079.cs" />
+    <Compile Remove="Migrations\20180509171809_Update079.cs" />
+    <Compile Remove="Migrations\20180510135305_Update082.cs" />
+    <Compile Remove="Migrations\20180511210627_Update088.cs" />
+    <Compile Remove="Migrations\20180511214335_Update088.cs" />
+    <Compile Remove="Migrations\20180511221231_Update090.cs" />
+    <Compile Remove="Migrations\20180511221938_Update088.cs" />
+    <Compile Remove="Migrations\20180511222234_Update088.cs" />
+    <Compile Remove="Migrations\20180511222951_Update088.cs" />
+    <Compile Remove="Migrations\20180511223304_Update088.cs" />
+    <Compile Remove="Migrations\20180511223708_Update088.cs" />
+    <Compile Remove="Migrations\20180518144402_Update097.cs" />
+    <Compile Remove="Migrations\20180525201700_Update106.cs" />
+    <Compile Remove="Migrations\20180525202109_Update106.cs" />
+    <Compile Remove="Migrations\20180525202356_Update106.cs" />
+    <Compile Remove="Migrations\20180525203234_Update106.cs" />
+    <Compile Remove="Migrations\20180604175806_Update116.cs" />
+    <Compile Remove="Migrations\20180928155123_Update122.cs" />
+    <Compile Remove="Migrations\20181002202132_update123.cs" />
+    <Compile Remove="Migrations\20181009150625_Update125.cs" />
+    <Compile Remove="Migrations\20181009150912_Update125.cs" />
+    <Compile Remove="Migrations\20181009162713_Update126.cs" />
+    <Compile Remove="Migrations\20181203171413_Update130.cs" />
+    <Compile Remove="Migrations\20181207184155_Update132.cs" />
+    <Compile Remove="Migrations\20181207184440_Update132.cs" />
+    <Compile Remove="Migrations\20181207204112_Update132.cs" />
+    <Compile Remove="Migrations\20181207204404_Update132.cs" />
+    <Compile Remove="Migrations\20181207211458_Update132.cs" />
+    <Compile Remove="Migrations\20181207212641_Update132.cs" />
+    <Compile Remove="Migrations\20181207212932_Update132.cs" />
+    <Compile Remove="Migrations\20190110191519_Update139.cs" />
+    <Compile Remove="Migrations\20190201195242_Update143.cs" />
+    <Compile Remove="Migrations\20190204145611_Update144.cs" />
+    <Compile Remove="Migrations\20190204210320_Update146.cs" />
+    <Compile Remove="Migrations\20190204210757_Update146.cs" />
+    <Compile Remove="Migrations\20190307151625_Update149.cs" />
+    <Compile Remove="Migrations\20190307153348_Update149.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="MIPE\Custom Repositories\ve-CEE1.tmp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LinqKit.Core" Version="1.1.16" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.1.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.1.11">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core.Common.Contracts\Core.Common.Contracts.csproj" />
+    <ProjectReference Include="..\Core.Common\Core.Common.csproj" />
+    <ProjectReference Include="..\TechAssist.Business.Entities\TechAssist.Business.Entities.csproj" />
+  </ItemGroup>
+
+  
+</Project>
