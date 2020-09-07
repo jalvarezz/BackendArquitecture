@@ -15,11 +15,5 @@
         string DecryptWithEncode(string str);
 
         T DecryptWithEncode<T>(string str);
-
-        bool MembershipProviderCheckPassword(string password, string salt, string hashedPassword);
-
-        string MembershipEncodePassword(string pass, string salt, string hashName);
-        string MembershipGeneratePaswordSalt(int size);
-
     }
 }

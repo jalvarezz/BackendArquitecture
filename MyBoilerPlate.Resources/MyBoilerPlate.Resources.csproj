@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -9,18 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Messages.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Messages.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Messages.fr.resx">
-      <LastGenOutput>Messages.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Update="Messages.es.resx">
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
       <Generator>ResXFileCodeGenerator</Generator>

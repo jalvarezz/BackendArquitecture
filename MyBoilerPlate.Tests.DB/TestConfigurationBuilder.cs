@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace EduEsp.Tests
+namespace MyBoilerPlate.Tests
 {
     public class TestConfigurationBuilder
     {

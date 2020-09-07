@@ -7,11 +7,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace TechAssist.Business.Entities
+namespace MyBoilerPlate.Business.Entities
 {
     [DataContract]
     [Table("EmployeeType")]
-    public class EmployeeType : EntityBase, IAuditableEntity, IDeferrableEntity
+    public class EmployeeType : EntityBase<Employee>, IAuditableEntity, IDeferrableEntity
     {
         #region Properties
         [DataMember]

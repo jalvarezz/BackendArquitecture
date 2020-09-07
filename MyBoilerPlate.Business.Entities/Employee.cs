@@ -7,11 +7,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace TechAssist.Business.Entities
+namespace MyBoilerPlate.Business.Entities
 {
     [DataContract]
-    [Table("Person")]
-    public class Employee : EntityBase, IAuditableEntity, IDeferrableEntity
+    [Table("Employee")]
+    public class Employee : EntityBase<Employee>, IAuditableEntity, IDeferrableEntity
     {
         #region Properties
         [DataMember]
@@ -19,8 +19,9 @@ namespace TechAssist.Business.Entities
         public int Id { get; set; }
 
         [DataMember]
+        [Required]
         [ForeignKey("EmployeeType")]
-        public int EmployeeTypeId { get; set; }
+        public int? EmployeeTypeId { get; set; }
 
         [DataMember]
         [Required]

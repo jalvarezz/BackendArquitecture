@@ -12,8 +12,8 @@ using System.Security.Claims;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using TechAssist.Business.Entities;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using MyBoilerPlate.Business.Entities;
 //using TechAssist.Business.Entities.DTOs;
 
 namespace MyBoilerPlate.Data
@@ -44,7 +44,8 @@ namespace MyBoilerPlate.Data
 
         #region Tables
 
-        public virtual DbSet<Employee> Persons { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<EmployeeType> EmployeeTypes { get; set; }
 
         #endregion
 
@@ -52,6 +53,9 @@ namespace MyBoilerPlate.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //TODO: Map Composite Keys Entities Here
+            //TODO: Set the .HasNoKey() to views and stored procedures
+
             //This lines map a DB funcion so we can call it inside the linq or lambda function that executes a query to the DB
             modelBuilder.HasDbFunction(typeof(SampleDataContextFunctions).GetMethod(nameof(SampleDataContextFunctions.CalcuateAgeInYearsMonths)))
             .HasTranslation(args => SqlFunctionExpression.Create("dbo",

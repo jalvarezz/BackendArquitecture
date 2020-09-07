@@ -3,14 +3,14 @@ using System;
 using Core.Common.Contracts;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
-using EduEsp.Web;
+using MyBoilerPlate.Web;
 using System.Linq;
-using EduEsp.Web.Api;
+using MyBoilerPlate.Web.Api;
 using System.Collections.Generic;
-using EduEsp.Web.Infrastructure.Installers;
-using EduEsp.Web.Infrastructure;
+using MyBoilerPlate.Web.Infrastructure.Installers;
+using MyBoilerPlate.Web.Infrastructure;
 
-namespace EduEsp.Tests
+namespace MyBoilerPlate.Tests
 {
     public abstract class TestBase
     {

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using Core.Common.Base;
+using MyBoilerPlate.Web.Infrastructure.Installers;
+using MyBoilerPlate.Business.Entities;
 
-namespace EduEsp.Tests.DB.Entities
+namespace MyBoilerPlate.Tests.DB.Entities
 {
     [TestClass]
     public class EntitiesTest : TestBase
@@ -64,7 +66,7 @@ namespace EduEsp.Tests.DB.Entities
 
             foreach(Type type in Assembly.GetAssembly(typeof(Employee)).GetTypes()
                                          .Where(myType => myType.IsClass && !myType.IsAbstract && 
-                                                          myType.IsSubclassOf(typeof(EntityBase)) &&
+                                                          myType.IsSubclassOf(typeof(EntityBase<>)) &&
                                                           !excludedTypes.Contains(myType) && 
                                                           (prefix == null || myType.Name.ToUpper().StartsWith(prefix)))
                                          .OrderBy(x => x.Name))

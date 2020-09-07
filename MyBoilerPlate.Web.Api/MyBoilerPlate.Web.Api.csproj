@@ -1,0 +1,70 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Configurations>Debug;Release;DatabaseBuild;Training</Configurations>
+    <ProjectGuid>{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}</ProjectGuid>
+    <ProjectGuid>{A8664BA2-9BD2-4080-B0F7-9903E83D60D3}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <WarningsAsErrors />
+    <CodeAnalysisRuleSet>MyBoilerPlate.Web.Api.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet>MyBoilerPlate.Web.Api.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Training|AnyCPU'">
+    <CodeAnalysisRuleSet>MyBoilerPlate.Web.Api.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DatabaseBuild|AnyCPU'">
+    <CodeAnalysisRuleSet>MyBoilerPlate.Web.Api.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Controllers\AppointmentController.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="IdentityModel" Version="4.1.1" />
+    <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.1.1" />
+    <PackageReference Include="Microsoft.CodeAnalysis" Version="3.7.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="3.1.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="3.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.3" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="3.1.0" />
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
+    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="5.1.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.0.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core.Common\Core.Common.csproj" />
+    <ProjectReference Include="..\MyBoilerPlate.Business.Entities\MyBoilerPlate.Business.Entities.csproj" />
+    <ProjectReference Include="..\MyBoilerPlate.Business\MyBoilerPlate.Business.csproj" />
+    <ProjectReference Include="..\MyBoilerPlate.Data\MyBoilerPlate.Data.csproj" />
+    <ProjectReference Include="..\MyBoilerPlate.Gateways.ReportServer\MyBoilerPlate.Gateways.ReportServer.csproj" />
+    <ProjectReference Include="..\MyBoilerPlate.Resources\MyBoilerPlate.Resources.csproj" />
+    <ProjectReference Include="..\MyBoilerPlate.Web.Infrastructure\MyBoilerPlate.Web.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Infrastructure\Extensions\" />
+    <Folder Include="TEMP\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="TEMP\Do not delete.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

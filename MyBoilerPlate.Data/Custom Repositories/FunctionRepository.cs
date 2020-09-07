@@ -14,7 +14,7 @@ namespace MyBoilerPlate.Data
 
         public decimal CalcuateAgeInYearsMonths(DateTime startDate, DateTime endDate)
         {
-            var result = _Context.Persons.Select(x => SampleDataContextFunctions.CalcuateAgeInYearsMonths(startDate, endDate)).FirstOrDefault();
+            var result = _Context.Employees.Select(x => SampleDataContextFunctions.CalcuateAgeInYearsMonths(startDate, endDate)).FirstOrDefault();
             return result;
         }
     }
