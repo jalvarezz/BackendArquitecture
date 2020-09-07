@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Json;
+using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 
 namespace Core.Common.Extensions
@@ -85,7 +83,83 @@ namespace Core.Common.Extensions
                              where p.GetValue(obj, null) != null
                              select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(obj, null).ToString());
 
-            return String.Join("&", properties.ToArray());
+            return string.Join("&", properties.ToArray());
+        }
+
+        public static byte[] SerializeToBytes(this object obj)
+        {
+            var formatter = new BinaryFormatter();
+            using(var stream = new MemoryStream())
+            {
+                formatter.Serialize(stream, obj);
+                stream.Seek(0, SeekOrigin.Begin);
+                return stream.ToArray();
+            }
+        }
+
+        public static T DeserializeFromBytes<T>(this byte[] bytes)
+        {
+            var formatter = new BinaryFormatter();
+            using(var stream = new MemoryStream(bytes))
+            {
+                return (T)formatter.Deserialize(stream);
+            }
+        }
+
+        public static byte[] CalculateMD5Hash(this object obj)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            var properties = obj.GetType().GetProperties();
+
+            foreach(var property in properties)
+            {
+                var propValue = property.GetValue(obj);
+
+                if(propValue != null)
+                    sb.Append(propValue.ToString());
+            }
+
+            var ctValues = sb.ToString();
+
+            if(string.IsNullOrEmpty(ctValues))
+                return null;
+
+            // step 1, calculate MD5 hash from concatenated values
+            MD5 md5 = MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(ctValues);
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            return hash;
+        }
+      
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="propertyNames"></param>
+        /// <param name="separator"></param>
+        /// <returns></returns>
+        public static string PropertyValuesAsString(this object obj, string[] propertyNames, string separator = "=")
+        {
+            if(obj != null)
+            {
+                var values = obj.GetType().GetProperties()
+                    .Where(x => propertyNames.Contains(x.Name))
+                        .Select(x =>
+                        new
+                        {
+                            property = x.Name,
+                            value = x.GetValue(obj, null),
+                        }
+                        ).ToDictionary(x => x.property, y => y.value);
+
+                return string.Join(";", values.Select(x => x.Key + separator + x.Value).ToArray());
+            }
+            else
+            {
+                return "NULL";
+            }
         }
     }
 }

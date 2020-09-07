@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace Core.Common
 {
@@ -14,45 +13,37 @@ namespace Core.Common
         {
         }
 
-        public PagedList(IEnumerable<T> source, int startRowIndex, int pageSize)
-            : this(source == null ? new List<T>().AsQueryable() : source.AsQueryable(), startRowIndex, pageSize)
+        public PagedList(IEnumerable<T> source, int currentPage, int pageSize)
+            : this(source == null ? new List<T>().AsQueryable() : source.AsQueryable(), currentPage, pageSize)
         {
         }
 
-        private PagedList(IQueryable<T> source, int startRowIndex, int pageSize)
+        private PagedList(IQueryable<T> source, int currentPage, int pageSize)
         {
-            _TotalItemCount = source.Count();
+            TotalItemCount = source.Count();
+            CurrentPage = currentPage < 1 ? 1 : currentPage;
 
-            // add items to internal list
-            if (_TotalItemCount > 0)
-            {
-                if (startRowIndex == -1)
-                {
-                    Data = source.Take(pageSize).ToArray();
-                    PageCount = 1;
-                }
-                else
-                {
-                    Data = source.Skip(startRowIndex).Take(pageSize).ToArray();
-                    PageCount = (int)Math.Ceiling(TotalItemCount / (decimal)pageSize);
-                }
+            if(TotalItemCount <= 0)
+                return;
 
-                Count = Data.Length;
-            }
+            Data = source.Skip((currentPage - 1) * pageSize).Take(pageSize).ToArray();
+            PageCount = (int)Math.Ceiling(TotalItemCount / (decimal)pageSize);
+
+            Count = Data.Length;
         }
 
         public PagedList(IEnumerable<T> source, int currentPage, int pageCount, int totalItemCount)
         {
-            _Count = source.Count();
+            Count = source.Count();
 
             // add items to internal list
-            if (_Count > 0)
-            {
-                TotalItemCount = totalItemCount;
-                PageCount = pageCount;
-                CurrentPage = currentPage;
-                Data = source.ToArray();
-            }
+            if (Count <= 0) 
+                return;
+            
+            TotalItemCount = totalItemCount;
+            PageCount = pageCount;
+            CurrentPage = currentPage;
+            Data = source.ToArray();
         }
 
         public IPagedList<TResult> TransformData<TResult>(Func<IEnumerable<T>, IEnumerable<TResult>> transform)
@@ -78,52 +69,16 @@ namespace Core.Common
             }
         }
 
-        int _TotalItemCount;
+        [DataMember(Name = "totalItemCount")]
+        public int TotalItemCount { get; set; }
 
-        [DataMember(Name = "totalitemcount")]
-        public int TotalItemCount
-        {
-            get {
-                return _TotalItemCount;
-            }
-            set {
-                _TotalItemCount = value;
-            }
-        }
-
-        int _CurrentPage;
-
-        [DataMember(Name = "currentpage")]
-        public int CurrentPage
-        {
-            get {
-                return _CurrentPage;
-            }
-            set {
-                _CurrentPage = value;
-            }
-        }
-
-        int _Count;
+        [DataMember(Name = "currentPage")]
+        public int CurrentPage { get; set; }
 
         [DataMember(Name = "count")]
-        public int Count
-        {
-            get {
-                return _Count;
-            }
-            set {
-                _Count = value;
-            }
-        }
+        public int Count { get; set; }
 
-        int _PageCount;
-
-        [DataMember(Name = "pagecount")]
-        public int PageCount
-        {
-            get { return _PageCount; }
-            set { _PageCount = value; }
-        }
+        [DataMember(Name = "pageCount")]
+        public int PageCount { get; set; }
     }
 }

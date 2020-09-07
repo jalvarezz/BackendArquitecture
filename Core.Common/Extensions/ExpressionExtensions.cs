@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Common.Extensions
 {
@@ -16,7 +12,7 @@ namespace Core.Common.Extensions
 
             MemberExpression memExp = null;
 
-            foreach (String part in propertyName.Split('.'))
+            foreach (string part in propertyName.Split('.'))
             {
                 if (memExp == null)
                     memExp = Expression.Property(parameter, part);
@@ -33,7 +29,7 @@ namespace Core.Common.Extensions
 
             PropertyInfo info = null;
             
-            foreach (String part in propertyName.Split('.'))
+            foreach (string part in propertyName.Split('.'))
             {
                 if (info == null)
                 {

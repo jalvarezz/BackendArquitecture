@@ -4,10 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using Core.Common.Extensions;
-using Core.Common;
-using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace Core.Common.Base
 {
@@ -18,160 +15,170 @@ namespace Core.Common.Base
         protected readonly U _Context;
         private readonly DbSet<TEntity> _DbSet;
 
-        public RepositoryBase(U context)
+        protected RepositoryBase(U context)
         {
             _Context = context;
             _DbSet = _Context.Set<TEntity>();
         }
 
-        public virtual TEntity Add(TEntity entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
         {
-            _Context.Set<TEntity>().Add(entity);
+            await _Context.Set<TEntity>().AddAsync(entity);
 
-            _Context.SaveChanges();
+            await _Context.SaveChangesAsync();
 
             return entity;
         }
 
-        public virtual void Remove(TEntity entity)
+        public virtual async Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entityList)
+        {
+            await _Context.Set<TEntity>().AddRangeAsync(entityList);
+
+            await _Context.SaveChangesAsync();
+
+            return entityList;
+        }
+
+        public virtual async Task RemoveAsync(TEntity entity)
         {
             _DbSet.Attach(entity);
-            _Context.Entry<TEntity>(entity).State = EntityState.Deleted;
-
-            _Context.SaveChanges();
-        }
-
-        public virtual void Remove(long id)
-        {
-            TEntity entity = _DbSet.Find(id);
 
             _Context.Entry<TEntity>(entity).State = EntityState.Deleted;
-            _Context.SaveChanges();
+
+            await _Context.SaveChangesAsync();
         }
 
-        public void Remove(IEnumerable<TEntity> entities)
+        public virtual async Task RemoveAllAsync(IEnumerable<TEntity> entities)
         {
-            foreach (TEntity current in entities)
+            foreach(TEntity current in entities)
             {
                 _DbSet.Attach(current);
                 _Context.Entry<TEntity>(current).State = EntityState.Deleted;
 
             }
-            _Context.SaveChanges();
+
+            await _Context.SaveChangesAsync();
         }
 
-        public virtual TEntity Update(TEntity entity)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
         {
             _DbSet.Attach(entity);
             _Context.Entry<TEntity>(entity).State = EntityState.Modified;
 
-            _Context.SaveChanges();
+            await _Context.SaveChangesAsync();
 
             return entity;
         }
 
-        public IEnumerable<TEntity> GetAll(string sortExpression = null)
-        {
-            return _DbSet.AsNoTracking().OrderBy(sortExpression).ToList();
-        }
-
-        public IEnumerable<TEntity> GetAll(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null, string sortExpression = null)
+        public virtual async Task<TEntity> GetSingleAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
             var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
             var notSortedResults = transform(query);
 
-            var sortedResults = sortExpression == null ? notSortedResults : notSortedResults.OrderBy(sortExpression);
-            
-            return sortedResults.ToArray().ToList();
+            return await notSortedResults.FirstOrDefaultAsync();
         }
-        
-        public IEnumerable<TResult> GetAll<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null, string sortExpression = null)
+
+        public virtual async Task<TResult> GetSingleAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
             var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
             var notSortedResults = transform(query);
 
-            var sortedResults = sortExpression == null ? notSortedResults : notSortedResults.OrderBy(sortExpression);
-          
-            return sortedResults.ToArray().ToList();
+            return await notSortedResults.FirstOrDefaultAsync();
         }
 
-        public int GetCount<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
+            var query = _DbSet.AsNoTracking();
 
-            return transform(query).Count();
+            return await query.ToListAsync();
         }
 
-        public IPagedList<TEntity> GetPaged(int startRowIndex, int pageSize, string sortExpression = null)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter)
         {
-            return new PagedList<TEntity>(_DbSet.AsNoTracking().OrderBy(sortExpression), startRowIndex, pageSize);
+            var query = _DbSet.AsNoTracking().Where(filter);
+
+            return await query.ToListAsync();
         }
 
-        public IPagedList<TEntity> GetPaged(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null, int startRowIndex = -1, int pageSize = -1, string sortExpression = null)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
             var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
             var notSortedResults = transform(query);
 
-            var sortedResults = sortExpression == null ? notSortedResults : notSortedResults.OrderBy(sortExpression);
-
-            return new PagedList<TEntity>(sortedResults, startRowIndex, pageSize);
+            return await notSortedResults.ToListAsync();
         }
 
-        public IPagedList<TResult> GetPaged<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null, int startRowIndex = -1, int pageSize = -1, string sortExpression = null)
-        {
-            var query =filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
-
-            var notSortedResults = transform(query);
-
-            var sortedResults = sortExpression == null ? notSortedResults : notSortedResults.OrderBy(sortExpression);
-
-            return new PagedList<TResult>(sortedResults, startRowIndex, pageSize);
-        }
-
-        public TEntity Get(long id)
-        {
-            return _DbSet.Find(id);
-        }
-
-        public TEntity Get(Guid id)
-        {
-            return _DbSet.Find(id);
-        }
-
-        public TResult Get<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null, string sortExpression = null)
-        {
-            var query = filter == null ? _DbSet : _DbSet.Where(filter);
-
-            var notSortedResults = transform(query);
-
-            var sortedResults = sortExpression == null ? notSortedResults : notSortedResults.OrderBy(sortExpression);
-
-            return sortedResults.FirstOrDefault();
-        }
-        public bool Exists(long id)
-        {
-            return _DbSet.Find(id) != null;
-        }
-
-        public bool Exists(Func<IQueryable<TEntity>, IQueryable<TEntity>> selector, Expression<Func<TEntity, bool>> filter = null)
+        public virtual async Task<IEnumerable<TResult>> GetAllAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
             var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
-            var result = selector(query);
+            var notSortedResults = transform(query);
 
-            return result.Any();
+            return await notSortedResults.ToListAsync();
         }
 
-        public bool Exists<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> selector, Expression<Func<TEntity, bool>> filter = null)
+        public virtual async Task<IPagedList<TEntity>> GetPagedAsync(int pageIndex, int pageSize)
+        {
+            return await Task.Run(() =>
+            {
+                var query = _DbSet.AsNoTracking();
+
+
+                return new PagedList<TEntity>(query, pageIndex, pageSize);
+            });
+        }
+
+        public virtual async Task<IPagedList<TEntity>> GetPagedAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null, int pageIndex = -1, int pageSize = -1)
+        {
+            return await Task.Run(() =>
+            {
+                var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
+
+                var notSortedResults = transform(query);
+
+                return new PagedList<TEntity>(notSortedResults, pageIndex, pageSize);
+            });
+        }
+
+        public virtual async Task<IPagedList<TResult>> GetPagedAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null, int pageIndex = -1, int pageSize = -1)
+        {
+            return await Task.Run(() =>
+            {
+                var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
+
+                var notSortedResults = transform(query);
+
+                return new PagedList<TResult>(notSortedResults, pageIndex, pageSize);
+            });
+        }
+
+        public virtual async Task<int> GetCountAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
             var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
-            var result = selector(query);
+            return await transform(query).CountAsync();
+        }
 
-            return result.Any();
+
+        public virtual async Task<bool> ExistsAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null)
+        {
+            var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
+
+            var result = transform(query);
+
+            return await result.AnyAsync();
+        }
+
+        public virtual async Task<bool> ExistsAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
+        {
+            var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
+
+            var result = transform(query);
+
+            return await result.AnyAsync();
         }
     }
 }

@@ -10,24 +10,19 @@ using System.Text;
 namespace TechAssist.Business.Entities
 {
     [DataContract]
-    [Table("Person")]
-    public class Person : EntityBase, IAuditableEntity, IDeferrableEntity
+    [Table("EmployeeType")]
+    public class EmployeeType : EntityBase, IAuditableEntity, IDeferrableEntity
     {
         #region Properties
         [DataMember]
         [Key]
-        [Column("PersonId")]
-        [MaxLength(10)]
-        public long Id { get; set; }
+        [Column("Id")]
+        public int Id { get; set; }
 
         [DataMember]
         [Required]
-        [MaxLength(100)]
-        public string Code { get; set; }
-
-        [DataMember]
-        [Required]
-        public string Message { get; set; }
+        [MaxLength(64)]
+        public string Name { get; set; }
 
         #endregion
 
@@ -46,14 +41,6 @@ namespace TechAssist.Business.Entities
 
         [DataMember]
         public Guid? UpdatedById { get; set; }
-        
-        [IgnoreDataMember]
-        [NotMapped]
-        public long EntityId
-        {
-            get { return Id; }
-            set { Id = value; }
-        }
 
         [DataMember]
         [Required]

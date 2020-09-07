@@ -1,9 +1,6 @@
-﻿using Core.Common;
-using Core.Common.Contracts;
+﻿using Core.Common.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MyBoilerPlate.Data
 {
@@ -12,19 +9,19 @@ namespace MyBoilerPlate.Data
     /// </summary>
     public class DataRepositoryFactory : IDataRepositoryFactory
     {
-        private readonly IServiceProvider services;
+        private readonly IServiceProvider _Services;
 
         public DataRepositoryFactory() { }
 
         public DataRepositoryFactory(IServiceProvider services)
         {
-            this.services = services;
+            this._Services = services;
         }
 
         public IDataRepository<TEntity> GetDataRepository<TEntity>() where TEntity : class, new()
         {
             //Import instance of T from the DI container
-            var instance = services.GetService<IDataRepository<TEntity>>();
+            var instance = _Services.GetService<IDataRepository<TEntity>>();
 
             return instance;
         }
@@ -32,7 +29,7 @@ namespace MyBoilerPlate.Data
         public TRepository GetCustomDataRepository<TRepository>() where TRepository : IDataRepository
         {
             //Import instance of the repository from the DI container
-            var instance = services.GetService<TRepository>();
+            var instance = _Services.GetService<TRepository>();
 
             return instance;
         }
@@ -40,7 +37,7 @@ namespace MyBoilerPlate.Data
         public IUnitOfWork GetUnitOfWork()
         {
             //Import instance of T from the DI container
-            var instance = services.GetService<IUnitOfWork>();
+            var instance = _Services.GetService<IUnitOfWork>();
 
             return instance;
         }
@@ -48,7 +45,14 @@ namespace MyBoilerPlate.Data
         public IUnitOfWork GetUnitOfWork<T>() where T : IUnitOfWork
         {
             //Import instance of T from the DI container
-            var instance = services.GetService<T>();
+            var instance = _Services.GetService<T>();
+
+            return instance;
+        }
+
+        public IContigencyDataRepository<TEntity> GetContigencyDataRepository<TEntity>() where TEntity : class, new()
+        {
+            var instance = _Services.GetService<IContigencyDataRepository<TEntity>>();
 
             return instance;
         }

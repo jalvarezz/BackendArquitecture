@@ -13,14 +13,15 @@ using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using TechAssist.Business.Entities;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 //using TechAssist.Business.Entities.DTOs;
 
-namespace TechAssist.Data
+namespace MyBoilerPlate.Data
 {
     public class SampleDataContext : DbContext
     {
 
-        private readonly IHttpContextAccessor _HttpContextAccessor;
+        private readonly IUserProfile _UserProfile;
 
         private bool CanUseSessionContext { get; set; }
 
@@ -31,10 +32,10 @@ namespace TechAssist.Data
             CanUseSessionContext = true;
         }
 
-        public SampleDataContext(DbContextOptions<SampleDataContext> options, IHttpContextAccessor httpContextAccessor)
+        public SampleDataContext(DbContextOptions<SampleDataContext> options, IUserProfile userProfile)
             : base(options)
         {
-            _HttpContextAccessor = httpContextAccessor;
+            _UserProfile = userProfile;
 
             CanUseSessionContext = true;
         }
@@ -43,7 +44,7 @@ namespace TechAssist.Data
 
         #region Tables
 
-        public virtual DbSet<Person> ValidationMessages { get; set; }
+        public virtual DbSet<Employee> Persons { get; set; }
 
         #endregion
 
@@ -51,6 +52,14 @@ namespace TechAssist.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //This lines map a DB funcion so we can call it inside the linq or lambda function that executes a query to the DB
+            modelBuilder.HasDbFunction(typeof(SampleDataContextFunctions).GetMethod(nameof(SampleDataContextFunctions.CalcuateAgeInYearsMonths)))
+            .HasTranslation(args => SqlFunctionExpression.Create("dbo",
+                                                                 "f_CalcuateAgeInYearsMonths",
+                                                                 args,
+                                                                 typeof(decimal?),
+                                                                 null));
+
             //Disable the cascade delete behavior
             var cascadeFKs = modelBuilder.Model.GetEntityTypes().SelectMany(t => t.GetForeignKeys())
                             .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
@@ -73,21 +82,6 @@ namespace TechAssist.Data
 
             if (auditableEntitySet != null)
             {
-                //Get the username that is saving the data
-                //Guid userId = Guid.Parse(_HttpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-                Guid userId;
-                Claim userClaim = _HttpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (userClaim != null)
-                {
-                    userId = Guid.Parse(_HttpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-                }
-                else
-                {
-                    userId = Guid.Parse("00000000-0000-0000-0000-000000000000");
-                }
-
                 DateTime currentDate = DateTime.Now;
 
                 // Audit set the audit information foreach record
@@ -96,11 +90,11 @@ namespace TechAssist.Data
                     if (auditableEntity.State == EntityState.Added)
                     {
                         auditableEntity.Entity.CreatedDate = currentDate;
-                        auditableEntity.Entity.CreatedById = userId;
+                        auditableEntity.Entity.CreatedById = _UserProfile.UserId;
                     }
 
                     auditableEntity.Entity.UpdatedDate = currentDate;
-                    auditableEntity.Entity.UpdatedById = userId;
+                    auditableEntity.Entity.UpdatedById = _UserProfile.UserId;
                 }
             }
 

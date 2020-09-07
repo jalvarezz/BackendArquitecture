@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Json;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Security.Cryptography;
 
 namespace Core.Common.Extensions
 {
@@ -21,7 +18,7 @@ namespace Core.Common.Extensions
 
             if(regex.Match(str).Success)
             {
-                return str.Substring(0,4) + "-****-****-" + str.Substring(str.Length-4,4);
+                return str.Substring(0, 4) + "-****-****-" + str.Substring(str.Length - 4, 4);
             }
             else
             {
@@ -39,9 +36,9 @@ namespace Core.Common.Extensions
         public static IEnumerable<string> SplitByLenght(this string str, int maxLength)
         {
             int index = 0;
-            while (true)
+            while(true)
             {
-                if (index + maxLength >= str.Length)
+                if(index + maxLength >= str.Length)
                 {
                     yield return str.Substring(index);
                     yield break;
@@ -50,5 +47,70 @@ namespace Core.Common.Extensions
                 index += maxLength;
             }
         }
+
+        public static List<T> Split<T>(this string value, string separator)
+        {
+            if(string.IsNullOrWhiteSpace(value))
+                return new List<T>();
+
+            return value.Split(separator)
+                        .Select(x => (T)Convert.ChangeType(x, typeof(T)))
+                        .ToList();
+        }
+
+        public static string FormatSSN(this string ssn)
+        {
+            if(ssn.Length == 9)
+            {
+                string lastDigits = ssn.Substring(ssn.Length - 4, 4);
+
+                return string.Format("*****{0}", lastDigits);
+            }
+
+            return ssn;
+        }
+
+        public static string CalculateMD5Hash(this string input)
+        {
+            // step 1, calculate MD5 hash from input
+            MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            // step 2, convert byte array to hex string
+            StringBuilder sb = new StringBuilder();
+            for(int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+            return sb.ToString();
+        }
+
+        public static string GetLast(this string str, int tail_length)
+        {
+            if(tail_length >= str.Length)
+                return str;
+            return str.Substring(str.Length - tail_length);
+        }
+
+        public static string RemoveSpecialChars(this string str)
+        {
+            char[] buffer = new char[str.Length];
+            int idx = 0;
+
+            foreach(char c in str)
+            {
+                if((c >= '0' && c <= '9') || (c >= 'A' && c <= 'Z')
+                    || (c >= 'a' && c <= 'z'))
+                {
+                    buffer[idx] = c;
+                    idx++;
+                }
+            }
+
+            return new string(buffer, 0, idx);
+        }
+
+
     }
 }

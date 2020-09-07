@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.Common.Exceptions
 {
-    [Serializable]
-    public class SecurityCustomException : ApplicationException
+    public class SecurityCustomException : Exception
     {
         [DataMember]
         public string ResponseCode { get; set; }
@@ -28,24 +23,6 @@ namespace Core.Common.Exceptions
         public SecurityCustomException(string message, Exception exception)
             : base(message, exception)
         {
-        }
-    }
-
-    [DataContract]
-    public class SecurityCustom
-    {
-        public string _Message;
-
-        [DataMember]
-        public string Message
-        {
-            get { return _Message; }
-            set { _Message = value; }
-        }
-
-        public SecurityCustom(string message)
-        {
-            Message = message;
         }
     }
 }
