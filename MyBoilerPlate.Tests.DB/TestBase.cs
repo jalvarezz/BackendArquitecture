@@ -9,11 +9,18 @@ using MyBoilerPlate.Web.Api;
 using System.Collections.Generic;
 using MyBoilerPlate.Web.Infrastructure.Installers;
 using MyBoilerPlate.Web.Infrastructure;
+using Moq;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using MyBoilerPlate.Web.Infrastructure.Settings;
+using System.Threading.Tasks;
 
 namespace MyBoilerPlate.Tests
 {
     public abstract class TestBase
     {
+        private Mock<IHttpContextAccessor> _MockHttpcontext;
+
         protected ServiceProvider ObjectContainer { get; private set; }
 
         protected void Initialize(IEnumerable<Type> installerTypes)
@@ -34,6 +41,43 @@ namespace MyBoilerPlate.Tests
             installers.ForEach(installer => installer.InstallServices(services, configuration));
 
             services.AddOptions();
+
+            //Mock Http for User Profile
+            _MockHttpcontext = new Mock<IHttpContextAccessor>();
+
+            IList<Claim> claimCollection = new List<Claim>
+                {
+                    new Claim("sub", "D5CD2754-ED7D-4A5E-A306-11C55711E889") //Test User UNIQUE ID
+                };
+
+            var identityMock = new Mock<ClaimsIdentity>();
+            identityMock.Setup(x => x.Claims).Returns(claimCollection);
+
+            var cp = new Mock<ClaimsPrincipal>();
+            cp.Setup(m => m.HasClaim(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
+            cp.Setup(m => m.Identity).Returns(identityMock.Object);
+
+            cp.SetupGet(m => m.Claims).Returns(() => {
+                var result = new List<Claim>();
+
+                result.AddRange(claimCollection);
+
+                return result;
+            });
+
+            var hc = new Mock<HttpContext>();
+            hc.Setup(h => h.User).Returns(cp.Object);
+
+            _MockHttpcontext.Setup(h => h.HttpContext).Returns(hc.Object);
+
+            services.AddScoped<IUserProfile>(serviceProvider =>
+            {
+                var appSettings = serviceProvider.GetService<AppSettings>();
+
+                return new UserProfile(_MockHttpcontext.Object, serviceProvider, appSettings);
+            });
+
+            services.AddScoped<IServiceProvider>(serviceProvider => serviceProvider);
 
             // Build the service provider
             ObjectContainer = services.BuildServiceProvider();
@@ -59,7 +103,9 @@ namespace MyBoilerPlate.Tests
 
             Debug.WriteLine($"Testing {typeof(T).Name} Repository");
 
-            NoExceptionThrown<Exception>(async () => { await repo.GetSingleAsync(x => x); });
+            NoExceptionThrown<Exception>(() => {
+                repo.GetSingleAsync(x => x).GetAwaiter().GetResult();
+            });
         }
     }
 }

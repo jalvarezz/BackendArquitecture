@@ -25,15 +25,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBoilerPlate.Resources", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBoilerPlate.Tests.DB", "MyBoilerPlate.Tests.DB\MyBoilerPlate.Tests.DB.csproj", "{A778AD11-E3CB-4879-9836-A2DEF9783936}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBoilerPlate.Tests", "MyBoilerPlate.Tests\MyBoilerPlate.Tests.csproj", "{5730A503-9B38-45B2-BCE7-92755AA66D0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBoilerPlate.Tests", "MyBoilerPlate.Tests\MyBoilerPlate.Tests.csproj", "{5730A503-9B38-45B2-BCE7-92755AA66D0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBoilerPlate.Web.Infrastructure", "MyBoilerPlate.Web.Infrastructure\MyBoilerPlate.Web.Infrastructure.csproj", "{47916F1A-7FBF-4459-8605-6BA289B7E9F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBoilerPlate.Web.Infrastructure", "MyBoilerPlate.Web.Infrastructure\MyBoilerPlate.Web.Infrastructure.csproj", "{47916F1A-7FBF-4459-8605-6BA289B7E9F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBoilerPlate.Business", "MyBoilerPlate.Business\MyBoilerPlate.Business.csproj", "{C0FD7F39-AE2F-4FDE-89A0-00EE43B0CA98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBoilerPlate.Business", "MyBoilerPlate.Business\MyBoilerPlate.Business.csproj", "{C0FD7F39-AE2F-4FDE-89A0-00EE43B0CA98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBoilerPlate.Gateways.ReportServer", "MyBoilerPlate.Gateways.ReportServer\MyBoilerPlate.Gateways.ReportServer.csproj", "{AA68B28A-FE0B-4989-B55C-4938B527B0F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBoilerPlate.Gateways.ReportServer", "MyBoilerPlate.Gateways.ReportServer\MyBoilerPlate.Gateways.ReportServer.csproj", "{AA68B28A-FE0B-4989-B55C-4938B527B0F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBoilerPlate.Web.Api", "MyBoilerPlate.Web.Api\MyBoilerPlate.Web.Api.csproj", "{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBoilerPlate.Web.Api", "MyBoilerPlate.Web.Api\MyBoilerPlate.Web.Api.csproj", "{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -191,22 +191,22 @@ Global
 		{AA68B28A-FE0B-4989-B55C-4938B527B0F2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AA68B28A-FE0B-4989-B55C-4938B527B0F2}.Training|Any CPU.ActiveCfg = Debug|Any CPU
 		{AA68B28A-FE0B-4989-B55C-4938B527B0F2}.Training|Any CPU.Build.0 = Debug|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.DatabaseBuild|Any CPU.ActiveCfg = DatabaseBuild|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.DatabaseBuild|Any CPU.Build.0 = DatabaseBuild|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.Produccion|Any CPU.ActiveCfg = DatabaseBuild|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.Produccion|Any CPU.Build.0 = DatabaseBuild|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.QA_DE|Any CPU.ActiveCfg = DatabaseBuild|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.QA_DE|Any CPU.Build.0 = DatabaseBuild|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.QA_NEXT|Any CPU.ActiveCfg = DatabaseBuild|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.QA_NEXT|Any CPU.Build.0 = DatabaseBuild|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.QA|Any CPU.ActiveCfg = DatabaseBuild|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.QA|Any CPU.Build.0 = DatabaseBuild|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.Training|Any CPU.ActiveCfg = Training|Any CPU
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96}.Training|Any CPU.Build.0 = Training|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.DatabaseBuild|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.DatabaseBuild|Any CPU.Build.0 = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.Produccion|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.Produccion|Any CPU.Build.0 = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.QA_DE|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.QA_DE|Any CPU.Build.0 = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.QA_NEXT|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.QA_NEXT|Any CPU.Build.0 = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.QA|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.QA|Any CPU.Build.0 = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.Training|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3}.Training|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -221,7 +221,7 @@ Global
 		{47916F1A-7FBF-4459-8605-6BA289B7E9F7} = {77F7E231-1793-40B8-A147-18F7A5A4FBF1}
 		{C0FD7F39-AE2F-4FDE-89A0-00EE43B0CA98} = {E75D8954-039F-40A9-8EBA-714FB7ADF195}
 		{AA68B28A-FE0B-4989-B55C-4938B527B0F2} = {B23137A6-0670-4F33-B96D-C4CF0F21678D}
-		{FC2125A2-90A4-4C2E-8E03-7B7EBAF08D96} = {77F7E231-1793-40B8-A147-18F7A5A4FBF1}
+		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3} = {77F7E231-1793-40B8-A147-18F7A5A4FBF1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {456EC5B0-50C8-464E-9EFA-FA3B0AB032DB}

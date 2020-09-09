@@ -8,11 +8,16 @@ using System;
 
 namespace Core.Common.Base
 {
+    public abstract class EntityBase
+    {
+
+    }
+
     /// <summary>
     /// Base client applied to the Business Entities
     /// </summary>
     [DataContract]
-    public abstract class EntityBase<T> : IExtensibleDataObject, IEquatable<T>
+    public abstract class EntityBase<T> : EntityBase, IExtensibleDataObject, IEquatable<T>
     {
         #region IExtensibleDataObject Members
 

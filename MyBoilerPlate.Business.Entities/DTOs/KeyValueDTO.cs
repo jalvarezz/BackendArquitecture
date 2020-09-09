@@ -10,13 +10,9 @@ using System.Text;
 namespace MyBoilerPlate.Business.Entities.DTOs
 {
     [DataContract]
-    public abstract class KeyValueBase : DTOBase<KeyValueBase>
+    public class KeyValueDTO : DTOBase<KeyValueDTO>
     {
-        #region Members
-
         private string _Name;
-
-        #endregion
 
         [DataMember]
         public string Name
@@ -34,12 +30,6 @@ namespace MyBoilerPlate.Business.Entities.DTOs
         [IgnoreDataMember]
         public int SortOrder { get; set; }
 
-
-    }
-
-    [DataContract]
-    public class KeyValueDTO : KeyValueBase
-    {
         [DataMember]
         public long Id { get; set; }
         [DataMember]
@@ -51,15 +41,51 @@ namespace MyBoilerPlate.Business.Entities.DTOs
     }
 
     [DataContract]
-    public class KeyValueDTO<TKey> : KeyValueBase
+    public class KeyValueDTO<TKey> : DTOBase<KeyValueDTO<TKey>>
     {
+        private string _Name;
+
+        [DataMember]
+        public string Name
+        {
+            get
+            {
+                return this._Name;
+            }
+            set
+            {
+                this._Name = !string.IsNullOrEmpty(value) ? value : null;
+            }
+        }
+
+        [IgnoreDataMember]
+        public int SortOrder { get; set; }
+
         [DataMember]
         public TKey Id { get; set; }
     }
 
     [DataContract]
-    public class KeyValueDTO<TKey, TValue> : KeyValueBase
+    public class KeyValueDTO<TKey, TValue> : DTOBase<KeyValueDTO<TKey, TValue>>
     {
+        private string _Name;
+
+        [DataMember]
+        public string Name
+        {
+            get
+            {
+                return this._Name;
+            }
+            set
+            {
+                this._Name = !string.IsNullOrEmpty(value) ? value : null;
+            }
+        }
+
+        [IgnoreDataMember]
+        public int SortOrder { get; set; }
+
         [DataMember]
         public TKey Id { get; set; }
 

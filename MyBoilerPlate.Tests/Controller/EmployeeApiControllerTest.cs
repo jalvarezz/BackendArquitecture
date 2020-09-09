@@ -58,7 +58,7 @@ namespace MyBoilerPlate.Tests.Controller
         [DataRow("John", DisplayName = "Testing employee search for John")]
         [DataRow("Karon", DisplayName = "Testing employee search for Karen")]
         //public void GetInitialFilters(int academicYear)
-        public async Task Get_Advanced_Requests(string name)
+        public async Task EmployeeSearch(string name)
         {
             // Arrange
             #region UserProfile (not necessary in this test)

@@ -19,7 +19,6 @@ namespace MyBoilerPlate.Tests.DB.Entities
         {
             this.Initialize(new List<Type>()
             {
-                typeof(HttpContextInstaller),
                 typeof(DataInstaller),
                 typeof(RepositoryInstaller)
             });
@@ -64,9 +63,9 @@ namespace MyBoilerPlate.Tests.DB.Entities
             if(!string.IsNullOrEmpty(prefix))
                 prefix = prefix.ToUpper();
 
-            foreach(Type type in Assembly.GetAssembly(typeof(Employee)).GetTypes()
+            foreach(Type type in Assembly.GetAssembly(typeof(Employee)).GetExportedTypes()
                                          .Where(myType => myType.IsClass && !myType.IsAbstract && 
-                                                          myType.IsSubclassOf(typeof(EntityBase<>)) &&
+                                                          myType.IsSubclassOf(typeof(EntityBase)) &&
                                                           !excludedTypes.Contains(myType) && 
                                                           (prefix == null || myType.Name.ToUpper().StartsWith(prefix)))
                                          .OrderBy(x => x.Name))
