@@ -14,6 +14,8 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using MyBoilerPlate.Business.Entities;
+using System.Threading.Tasks;
+using System.Threading;
 //using TechAssist.Business.Entities.DTOs;
 
 namespace MyBoilerPlate.Data
@@ -103,6 +105,32 @@ namespace MyBoilerPlate.Data
             }
 
             return base.SaveChanges();
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            // Get the entries that are auditable
+            var auditableEntitySet = ChangeTracker.Entries<IAuditableEntity>();
+
+            if (auditableEntitySet != null)
+            {
+                DateTime currentDate = DateTime.Now;
+
+                // Audit set the audit information foreach record
+                foreach (var auditableEntity in auditableEntitySet.Where(c => c.State == EntityState.Added || c.State == EntityState.Modified))
+                {
+                    if (auditableEntity.State == EntityState.Added)
+                    {
+                        auditableEntity.Entity.CreatedDate = currentDate;
+                        auditableEntity.Entity.CreatedById = _UserProfile.UserId;
+                    }
+
+                    auditableEntity.Entity.UpdatedDate = currentDate;
+                    auditableEntity.Entity.UpdatedById = _UserProfile.UserId;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
 
         #endregion
