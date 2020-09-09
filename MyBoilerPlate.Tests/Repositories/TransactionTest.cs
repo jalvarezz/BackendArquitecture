@@ -30,6 +30,7 @@ namespace MyBoilerPlate.Tests.Repositories
             {
                 typeof(HttpContextInstaller),
                 typeof(DataInstaller),
+                typeof(FakeRepositoryInstaller)
             });
 
             _DataRepositoryFactory = ObjectContainer.GetService<IDataRepositoryFactory>();

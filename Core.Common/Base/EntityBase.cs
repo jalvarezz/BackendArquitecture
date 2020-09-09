@@ -29,7 +29,10 @@ namespace Core.Common.Base
 
         public override bool Equals(object obj)
         {
-            return this.Equals((T)obj);
+            if(obj.GetType() == typeof(T))
+                return this.Equals((T)obj);
+
+            return false;
         }
 
         public bool Equals(T x)

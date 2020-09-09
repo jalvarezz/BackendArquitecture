@@ -18,7 +18,19 @@ namespace MyBoilerPlate.Tests
             {
                 //Load test data
                 //NOTE: Remember to filter only the data that you need to test
-                this.FakeData = context.Employees.Select(y => y).ToList();
+                this.FakeData = context.Employees.Select(y => new Employee
+                {
+                    Id = y.Id,
+                    EmployeeTypeId = y.EmployeeTypeId,
+                    FirstName = y.FirstName,
+                    LastName = y.LastName,
+                    OfficialDocumentId = y.OfficialDocumentId,
+                    EmployeeType = new EmployeeType
+                    {
+                        Id = y.EmployeeType.Id,
+                        Name = y.EmployeeType.Name
+                    }
+                }).ToList();
 
                 //Record the data
                 Record.RecordData(this.FakeData);

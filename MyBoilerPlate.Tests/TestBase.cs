@@ -54,7 +54,7 @@ namespace MyBoilerPlate.Tests
             {
                 var controllerBaseType = typeof(MyBoilerPlate.Web.Infrastructure.ApiControllerBase);
 
-                var controllerTypes = controllerBaseType.Assembly.DefinedTypes.Where(x => x != controllerBaseType &&
+                var controllerTypes = typeof(Startup).Assembly.DefinedTypes.Where(x => x != controllerBaseType &&
                     controllerBaseType.IsAssignableFrom(x)).ToList();
 
                 controllerTypes.ForEach(controllerType =>

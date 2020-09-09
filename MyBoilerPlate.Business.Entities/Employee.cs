@@ -16,6 +16,7 @@ namespace MyBoilerPlate.Business.Entities
         #region Properties
         [DataMember]
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [DataMember]

@@ -6,7 +6,7 @@ namespace MyBoilerPlate.Resources
 {
     public class MessagesResourceHandler : IMessagesResourceHandler
     {
-        private const string _ResourceFilePath = @"MyBoilerPlate.Resources.ValidationMessages";
+        private const string _ResourceFilePath = @"MyBoilerPlate.Resources.Messages";
         private readonly ResourceManager _ResourceManager;
 
         public MessagesResourceHandler()

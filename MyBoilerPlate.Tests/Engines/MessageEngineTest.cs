@@ -32,7 +32,7 @@ namespace EduEsp.Tests.Engines
         public void ValidationMessageEngineTest_GetMessages()
         {
             // Arrange
-            string[] messages = new string[3] { "191347", "191357", "R1000001" };
+            string[] messages = new string[1] { "M000001" };
 
             // Act  
             var data = _MessageHandler.GetMessages(messages);
