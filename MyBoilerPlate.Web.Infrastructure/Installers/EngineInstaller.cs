@@ -25,7 +25,18 @@ namespace MyBoilerPlate.Web.Api.Infrastructure.Installers
             services.AddScoped<IBusinessEngineFactory, BusinessEngineFactory>();
 
             //Engines injection            
-            services.AddTransient<IEmployeeEngine, EmployeeEngine>();
+            var engineTypes =
+                typeof(BusinessEngineFactory).Assembly
+                                             .ExportedTypes
+                                             .Where(x => typeof(IBusinessEngine).IsAssignableFrom(x) &&
+                                                         !x.IsInterface &&
+                                                         !x.IsAbstract).ToList();
+
+            engineTypes.ForEach(engineType =>
+            {
+                services.AddScoped(engineType.GetInterface($"I{engineType.Name}"),
+                                   engineType);
+            });
         }
     }
 }

@@ -6,6 +6,7 @@ using Core.Common;
 using MyBoilerPlate.Data.Contracts;
 using MyBoilerPlate.Data;
 using Core.Common.Contracts;
+using System.Linq;
 
 namespace MyBoilerPlate.Web.Infrastructure.Installers
 {
@@ -21,8 +22,20 @@ namespace MyBoilerPlate.Web.Infrastructure.Installers
             services.AddTransient(typeof(IDataRepository<>), typeof(Repository<>));
 
             //Custom Repositories injection            
-            services.AddTransient<IStoredProcedureRepository, StoredProcedureRepository>();
-            services.AddTransient<IFunctionRepository, FunctionRepository>();
+            var repositoryTypes =
+                typeof(Repository<>).Assembly
+                                    .ExportedTypes
+                                    .Where(x => typeof(IDataRepository).IsAssignableFrom(x) &&
+                                                !x.IsInterface &&
+                                                !x.IsAbstract).ToList();
+
+            repositoryTypes.ForEach(repositoryType =>
+            {
+                var contract = repositoryType.GetInterface($"I{repositoryType.Name}");
+
+                if (contract != null)
+                    services.AddScoped(contract, repositoryType);
+            });
         }
     }
 }
