@@ -9,17 +9,14 @@ using System.Text;
 
 namespace MyBoilerPlate.Business.Entities
 {
-    [DataContract]
     [Table("EmployeeType")]
-    public class EmployeeType : EntityBase<Employee>, IAuditableEntity, IDeferrableEntity
+    public class EmployeeType : AuditableEntityBase<Employee>, IDeleteableEntity
     {
         #region Properties
-        [DataMember]
         [Key]
         [Column("Id")]
         public int Id { get; set; }
 
-        [DataMember]
         [Required]
         [MaxLength(64)]
         public string Name { get; set; }
@@ -28,23 +25,8 @@ namespace MyBoilerPlate.Business.Entities
 
         #region Interface Implentations
 
-        [DataMember]
         [Required]
-        public DateTime CreatedDate { get; set; }
-
-        [DataMember]
-        [Required]
-        public Guid CreatedById { get; set; }
-
-        [DataMember]
-        public DateTime? UpdatedDate { get; set; }
-
-        [DataMember]
-        public Guid? UpdatedById { get; set; }
-
-        [DataMember]
-        [Required]
-        public bool Deferred { get; set; }
+        public bool IsDeleted { get; set; }
 
         #endregion
     }

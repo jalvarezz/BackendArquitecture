@@ -5,12 +5,12 @@ using Microsoft.Extensions.Options;
 namespace MyBoilerPlate.Web.Services
 {
 
-    public class EmailSender : IEmailSender
+    public class SMTPEmailSender : ISMTPEmailSender
     {
         private readonly EmailSetting _EmailSetting;
         private readonly IDataRepositoryFactory _DataRepositoryFactory;
 
-        public EmailSender(EmailSetting emailSetting, IDataRepositoryFactory dataRepositoryFactory)
+        public SMTPEmailSender(EmailSetting emailSetting, IDataRepositoryFactory dataRepositoryFactory)
         {
             _EmailSetting = emailSetting;
             _DataRepositoryFactory = dataRepositoryFactory;

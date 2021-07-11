@@ -4,6 +4,16 @@ using MyBoilerPlate.Business.Engines.Contracts;
 using MyBoilerPlate.Business.Engines;
 using Core.Common;
 using System.Linq;
+using MyBoilerPlate.Gateways.NeverBounce;
+using MyBoilerPlate.Gateways.AWS.Contracts;
+using MyBoilerPlate.Gateways.NeverBounce.Contracts;
+using MyBoilerPlate.Gateways.Twilio.Contracts;
+using MyBoilerPlate.Gateways.Twilio;
+using Core.Common.Contracts;
+using MyBoilerPlate.Business;
+using System.Net.Http;
+using System;
+using MyBoilerPlate.Gateways.AWS;
 
 namespace MyBoilerPlate.Web.Infrastructure.Installers
 {
@@ -11,16 +21,27 @@ namespace MyBoilerPlate.Web.Infrastructure.Installers
     {
         public void InstallServices(IServiceCollection services, IConfiguration configuration)
         {
-            //Install here your settings and DI configuration to external web services (ex. Reporting services)
+            var neverBounceSettings = new NeverBounceSetting();
+            configuration.GetSection(nameof(NeverBounceSetting)).Bind(neverBounceSettings);
 
-            ////var reportServerSettings = new ReportServerSetting();
-            ////configuration.GetSection(nameof(ReportServerSetting)).Bind(reportServerSettings);
+            if (!services.Any(x => x.ServiceType == typeof(NeverBounceSetting)))
+                services.AddSingleton(neverBounceSettings);
 
-            ////if(!services.Any(x => x.ServiceType == typeof(ReportServerSetting)))
-            ////    services.AddSingleton(reportServerSettings);
+            services.AddTransient<INeverBounceGateway, NeverBounceGateway>();
+            services.AddTransient<IAWSGateway, AWSGateway>();
+            services.AddTransient<ITwilioGateway, TwilioGateway>();
 
-            ////// Gateways injection
-            ////services.AddTransient<IReportServerGateway, ReportServerGateway>();
+            services.AddTransient<IGatewayFactory, GatewayFactory>();
+
+            services.AddHttpClient("bounce", c =>
+            {
+                ConfigureBounceHttpClient(c, neverBounceSettings);
+            });
+        }
+
+        private void ConfigureBounceHttpClient(HttpClient client, NeverBounceSetting settings)
+        {
+            client.BaseAddress = new Uri($"{settings.Host}/{settings.Version}/");
         }
     }
 }

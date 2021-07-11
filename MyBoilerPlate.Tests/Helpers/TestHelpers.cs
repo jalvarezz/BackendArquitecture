@@ -1,7 +1,6 @@
 ﻿using Core.Common.Base;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -9,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
+using System.Text.Json;
 
 namespace MyBoilerPlate.Tests.Helpers
 {
@@ -46,13 +46,13 @@ namespace MyBoilerPlate.Tests.Helpers
 
             //IEnumerable<T> data = JsonConvert.DeserializeObject<IEnumerable<T>>(File.ReadAllText(path));
             // deserialize JSON directly from a file
-        
+
             var stringFile = File.ReadAllText(path);
-            var data = JsonConvert.DeserializeObject<IEnumerable<T>>(stringFile);
-        
+            var data = JsonSerializer.Deserialize<IEnumerable<T>>(stringFile);
+
             return data;
         }
-        
+
         /// <summary>
         /// Record Collection into .json for create started files
         /// </summary>
@@ -74,12 +74,13 @@ namespace MyBoilerPlate.Tests.Helpers
             if (!exists || (exists && overrideFile))
             {
                 // serialize JSON directly to a file
-                using(StreamWriter file = File.CreateText(path))
-                {
-                    JsonSerializer serializer = new JsonSerializer();
-                    serializer.Serialize(file, collection);
-                }
+                File.WriteAllText(path, JsonSerializer.Serialize(collection));
             }
+        }
+
+        public static byte[] GetBytes(int length)
+        {
+            return new byte[length];
         }
     }
 }

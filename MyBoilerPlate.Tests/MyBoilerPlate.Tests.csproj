@@ -1,22 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
 
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
-    <PackageReference Include="Moq" Version="4.14.5" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
-    <PackageReference Include="coverlet.collector" Version="1.3.0">
+    <Content Remove="C:\Users\juana\.nuget\packages\microsoft.testplatform.testhost\16.10.0\build\netcoreapp2.1\x64\Microsoft.TestPlatform.PlatformAbstractions.dll" />
+    <Content Remove="C:\Users\juana\.nuget\packages\microsoft.testplatform.testhost\16.10.0\build\netcoreapp2.1\x64\testhost.dll" />
+    <Content Remove="C:\Users\juana\.nuget\packages\microsoft.testplatform.testhost\16.10.0\build\netcoreapp2.1\x64\testhost.exe" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="C:\Users\juana\.nuget\packages\mstest.testadapter\2.2.5\build\netcoreapp1.0\..\_common\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll" />
+    <None Remove="C:\Users\juana\.nuget\packages\mstest.testadapter\2.2.5\build\netcoreapp1.0\..\_common\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll" />
+    <None Remove="C:\Users\juana\.nuget\packages\mstest.testadapter\2.2.5\build\netcoreapp1.0\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll" />
+    <None Remove="C:\Users\juana\.nuget\packages\mstest.testadapter\2.2.5\build\netcoreapp1.0\\Microsoft.TestPlatform.AdapterUtilities.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.5" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.5" />
+    <PackageReference Include="coverlet.collector" Version="3.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Shouldly" Version="3.0.2" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="xunit" Version="2.4.1" />
     <PackageReference Include="xunit.extensibility.core" Version="2.4.1" />
   </ItemGroup>
@@ -33,12 +45,6 @@
 
   <ItemGroup>
     <Folder Include="Recording\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

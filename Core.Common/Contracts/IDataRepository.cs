@@ -13,38 +13,42 @@ namespace Core.Common.Contracts
     public interface IDataRepository<T> : IDataRepository
         where T : class, new()
     {
-        Task<T> AddAsync(T entity);
+        ValueTask<T> AddAsync(T entity);
 
-        Task<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entityList);
+        ValueTask<IEnumerable<T>> AddRangeAsync(IEnumerable<T> entityList);
 
-        Task<T> UpdateAsync(T entity);
+        ValueTask RemoveAllAsync(IEnumerable<T> entities);
 
-        Task RemoveAllAsync(IEnumerable<T> entities);
+        ValueTask RemoveAsync(T entity);
 
-        Task RemoveAsync(T entity);
+        ValueTask SoftRemoveAllAsync(IEnumerable<IDeleteableEntity> entities);
 
-        Task<T> GetSingleAsync(Func<IQueryable<T>, IQueryable<T>> transform, Expression<Func<T, bool>> filter = null);
+        ValueTask SoftRemoveAsync(IDeleteableEntity entity);
 
-        Task<TResult> GetSingleAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null);
+        ValueTask<T> UpdateAsync(T entity);
 
-        Task<IEnumerable<T>> GetAllAsync();
+        ValueTask<IEnumerable<T>> GetAllAsync();
 
-        Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter);
+        ValueTask<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter);
 
-        Task<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>, IQueryable<T>> transform, Expression<Func<T, bool>> filter = null);
+        ValueTask<IEnumerable<T>> GetAllAsync(Func<IQueryable<T>, IQueryable<T>> transform, Expression<Func<T, bool>> filter = null);
 
-        Task<IEnumerable<TResult>> GetAllAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null);
+        ValueTask<IEnumerable<TResult>> GetAllAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null);
 
-        Task<IPagedList<T>> GetPagedAsync(int pageIndex, int pageSize);
+        ValueTask<IPagedList<T>> GetPagedAsync(int pageIndex, int pageSize);
 
-        Task<IPagedList<T>> GetPagedAsync(Func<IQueryable<T>, IQueryable<T>> transform, Expression<Func<T, bool>> filter = null, int pageIndex = -1, int pageSize = -1);
+        ValueTask<IPagedList<T>> GetPagedAsync(Func<IQueryable<T>, IQueryable<T>> transform, Expression<Func<T, bool>> filter = null, int pageIndex = -1, int pageSize = -1);
 
-        Task<IPagedList<TResult>> GetPagedAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null, int pageIndex = -1, int pageSize = -1);
+        ValueTask<IPagedList<TResult>> GetPagedAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null, int pageIndex = -1, int pageSize = -1);
 
-        Task<int> GetCountAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null);
+        ValueTask<int> GetCountAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null);
 
-        Task<bool> ExistsAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null);
+        ValueTask<TResult> GetAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null);
 
-        Task<bool> ExistsAsync(Func<IQueryable<T>, IQueryable<T>> transform, Expression<Func<T, bool>> filter = null);
+        ValueTask<bool> ExistsAsync(Expression<Func<T, bool>> filter = null);
+
+        ValueTask<bool> ExistsAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null);
+
+        ValueTask<bool> ExistsAsync(Func<IQueryable<T>, IQueryable<T>> transform, Expression<Func<T, bool>> filter = null);
     }
 }

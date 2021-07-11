@@ -9,7 +9,7 @@ namespace MyBoilerPlate.Tests
         {
             var configuration = new ConfigurationBuilder()
                                 .SetBasePath(outputPath)
-                                .AddJsonFile("appsettings.json", optional: true)
+                                .AddJsonFile("appsettings.Development.json", optional: true)
                                 .AddEnvironmentVariables()
                                 .Build();
 

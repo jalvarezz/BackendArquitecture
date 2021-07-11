@@ -18,7 +18,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Security.Claims;
@@ -29,7 +28,7 @@ using MyBoilerPlate.Web.Models;
 namespace MyBoilerPlate.Tests.Controller
 {
     [TestClass]
-    public class CompensatoryRequestApiControllerTest : TestBase
+    public class EmployeeApiControllerTest : TestBase
     {
         private EmployeeApiController _Controller;
         private IBusinessEngineFactory _BusinessEngineFactory;

@@ -5,6 +5,7 @@ using Core.Common.Contracts;
 using MyBoilerPlate.Web.Infrastructure.Settings;
 using MyBoilerPlate.Web.Infrastructure;
 using MyBoilerPlate.Web.Infrastructure.Services;
+using Core.Common.Services;
 
 namespace MyBoilerPlate.Web.Api.Infrastructure.Installers
 {

@@ -5,22 +5,14 @@ namespace Core.Common.Contracts
 {
     public interface ICacheService
     {
-        T GetCached<T>(string key);
+        ValueTask<T> GetCachedAsync<T>(string key);
 
-        Task<T> GetCachedAsync<T>(string key);
+        ValueTask<T> GetCachedAsync<T>(string key, Func<Task<T>> initializer);
 
-        T GetCached<T>(string key, Func<T> initializer);
+        ValueTask<T> GetCachedAsync<T>(string key, Func<Task<T>> initializer, TimeSpan slidingExpiration);
 
-        Task<T> GetCachedAsync<T>(string key, Func<Task<T>> initializer);
+        ValueTask AppendToCachedListAsync<T>(string key, T item);
 
-        T GetCached<T>(string key, Func<T> initializer, TimeSpan slidingExpiration);
-
-        Task<T> GetCachedAsync<T>(string key, Func<Task<T>> initializer, TimeSpan slidingExpiration);
-
-        void AppendToCachedList<T>(string key, T item);
-
-        Task AppendToCachedListAsync<T>(string key, T item);
-
-        Task Clear(string key);
+        ValueTask ClearAsync(string key);
     }
 }

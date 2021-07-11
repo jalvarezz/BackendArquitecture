@@ -6,30 +6,9 @@ using System;
 
 namespace MyBoilerPlate.Web
 {
-    public static class Program
+    public class Program
     {
-        public static void Main(string[] args)
-        {
-            SetupLogger();
-
-            
-            CreateHostBuilder(args).Build().Run();
-        }
-
-        public static IHostBuilder CreateHostBuilder(string[] args)
-        {
-            return Host.CreateDefaultBuilder(args)
-                       .UseSerilog()
-                       .ConfigureWebHostDefaults(webBuilder =>
-                       {
-                           webBuilder.UseStartup<Startup>();
-                       }).ConfigureAppConfiguration(context =>
-                       {
-                           context.AddEnvironmentVariables();
-                       });
-        }
-
-        private static void SetupLogger()
+        public static int Main(string[] args)
         {
             var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
@@ -41,8 +20,35 @@ namespace MyBoilerPlate.Web
                                     .Build();
 
             Log.Logger = new LoggerConfiguration()
-                            .ReadFrom.Configuration(configuration)
-                            .CreateLogger();
+                     .ReadFrom.Configuration(configuration)
+                     .CreateLogger();
+
+            try
+            {
+                var host = CreateHostBuilder(args).Build();
+
+                Log.Information("Starting host...");
+                host.Run();
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly.");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseSerilog()
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

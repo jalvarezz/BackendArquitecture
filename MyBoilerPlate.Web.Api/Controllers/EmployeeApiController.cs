@@ -134,7 +134,7 @@ namespace MyBoilerPlate.Web.Api.Controllers
             {
                 var repo = _DataRepositoryFactory.GetDataRepository<Employee>();
 
-                var entity = await repo.GetSingleAsync(x => x.Select(r => r), x => x.Id == id);
+                var entity = await repo.GetAsync(x => x.Select(r => r), x => x.Id == id);
 
                 await repo.RemoveAsync(entity);
                 await trans.CommitAsync();

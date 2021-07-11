@@ -72,9 +72,7 @@ namespace MyBoilerPlate.Tests
 
             services.AddScoped<IUserProfile>(serviceProvider =>
             {
-                var appSettings = serviceProvider.GetService<AppSettings>();
-
-                return new UserProfile(_MockHttpcontext.Object, serviceProvider, appSettings);
+                return new UserProfile(_MockHttpcontext.Object, serviceProvider);
             });
 
             services.AddScoped<IServiceProvider>(serviceProvider => serviceProvider);
@@ -104,7 +102,7 @@ namespace MyBoilerPlate.Tests
             Debug.WriteLine($"Testing {typeof(T).Name} Repository");
 
             NoExceptionThrown<Exception>(() => {
-                repo.GetSingleAsync(x => x).GetAwaiter().GetResult();
+                repo.GetAsync(x => x).GetAwaiter().GetResult();
             });
         }
     }

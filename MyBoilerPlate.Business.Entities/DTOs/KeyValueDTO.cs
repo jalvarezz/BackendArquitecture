@@ -9,12 +9,10 @@ using System.Text;
 
 namespace MyBoilerPlate.Business.Entities.DTOs
 {
-    [DataContract]
     public class KeyValueDTO : DTOBase<KeyValueDTO>
     {
         private string _Name;
 
-        [DataMember]
         public string Name
         {
             get
@@ -27,25 +25,21 @@ namespace MyBoilerPlate.Business.Entities.DTOs
             }
         }
 
-        [IgnoreDataMember]
         public int SortOrder { get; set; }
 
-        [DataMember]
         public long Id { get; set; }
-        [DataMember]
+
         public bool Selected { get; set; }
-        [DataMember]
+ 
         public bool Disabled { get; set; }
 
         public bool IsDirty { get; set; }
     }
 
-    [DataContract]
     public class KeyValueDTO<TKey> : DTOBase<KeyValueDTO<TKey>>
     {
         private string _Name;
 
-        [DataMember]
         public string Name
         {
             get
@@ -58,19 +52,15 @@ namespace MyBoilerPlate.Business.Entities.DTOs
             }
         }
 
-        [IgnoreDataMember]
         public int SortOrder { get; set; }
 
-        [DataMember]
         public TKey Id { get; set; }
     }
 
-    [DataContract]
     public class KeyValueDTO<TKey, TValue> : DTOBase<KeyValueDTO<TKey, TValue>>
     {
         private string _Name;
 
-        [DataMember]
         public string Name
         {
             get
@@ -83,13 +73,10 @@ namespace MyBoilerPlate.Business.Entities.DTOs
             }
         }
 
-        [IgnoreDataMember]
         public int SortOrder { get; set; }
 
-        [DataMember]
         public TKey Id { get; set; }
 
-        [DataMember]
         public TValue Value { get; set; }
     }
 }

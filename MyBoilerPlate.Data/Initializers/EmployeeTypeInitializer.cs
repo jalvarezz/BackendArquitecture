@@ -23,13 +23,13 @@ namespace MyBoilerPlate.Data.Initializers
                 _Context.EmployeeTypes.Add(new EmployeeType
                 {
                     Name = "Manager",
-                    Deferred = false
+                    IsDeleted = false
                 });
 
                 _Context.EmployeeTypes.Add(new EmployeeType
                 {
                     Name = "Director",
-                    Deferred = false
+                    IsDeleted = false
                 });
 
                 await _Context.SaveChangesAsync();

@@ -36,7 +36,7 @@ namespace MyBoilerPlate.Web.Infrastructure.Installers
             services.AddSingleton<IMessageHandler, MessageHandler>();
 
             // Add application services.
-            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<ISMTPEmailSender, SMTPEmailSender>();
             services.AddTransient<IRequestProvider, RequestProvider>();
 
             //User Profile

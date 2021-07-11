@@ -21,54 +21,62 @@ namespace MyBoilerPlate.Tests.Fake
             FakeData = new List<TEntity>();
         }
 
-        public override async Task<TEntity> AddAsync(TEntity entity)
+        public override async ValueTask<TEntity> AddAsync(TEntity entity)
         {
             return await Task.Run(() =>
             {
                 FakeData.Add(entity);
 
-                this.ResolveIdentityProperties(entity);
+                ResolveIdentityProperties(entity);
 
                 return entity;
             });
         }
-        
-        public override async Task<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entityList)
+
+        public override async ValueTask<IEnumerable<TEntity>> AddRangeAsync(IEnumerable<TEntity> entityList)
         {
-            return await Task.Run(() =>
-            {
+            return await Task.Run(() => {
                 foreach (var item in entityList)
                 {
                     FakeData.Add(item);
-
-                    this.ResolveIdentityProperties(item);
+                    ResolveIdentityProperties(item);
                 }
 
                 return FakeData;
             });
         }
 
-
-        public override async Task RemoveAsync(TEntity entity)
+        public override async ValueTask RemoveAsync(TEntity entity)
         {
             await Task.Run(() => FakeData.Remove(entity));
         }
 
-        public override async Task RemoveAllAsync(IEnumerable<TEntity> entities)
+        public override async ValueTask RemoveAllAsync(IEnumerable<TEntity> entities)
+        {
+            await Task.Run(() => FakeData = FakeData.AsEnumerable().Intersect(entities).ToList());
+        }
+
+        public override async ValueTask SoftRemoveAsync(IDeleteableEntity entity)
         {
             await Task.Run(() =>
             {
-                foreach (var item in entities)
+                entity.IsDeleted = true;
+
+                var entityToUpdate = entity as TEntity;
+            });
+        }
+
+        public override async ValueTask SoftRemoveAllAsync(IEnumerable<IDeleteableEntity> entities)
+        {
+            await Task.Run(() => {
+                foreach (var entry in entities)
                 {
-                    if (FakeData.Any(x => x == item))
-                    {
-                        FakeData.Remove(item);
-                    }
+                    entry.IsDeleted = true;
                 }
             });
         }
 
-        public override async Task<TEntity> UpdateAsync(TEntity entity)
+        public override async ValueTask<TEntity> UpdateAsync(TEntity entity)
         {
             return await Task.Run(() =>
             {
@@ -83,17 +91,31 @@ namespace MyBoilerPlate.Tests.Fake
             });
         }
 
-        public override async Task<IEnumerable<TEntity>> GetAllAsync()
+        public override async ValueTask<TResult> GetAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
+        {
+            return await Task.Run(() =>
+            {
+                var query = FakeData.AsQueryable();
+
+                var data = filter == null ? query : query.Where(filter);
+
+                var notSortedResults = transform(data);
+
+                return notSortedResults.FirstOrDefault();
+            });
+        }
+
+        public override async ValueTask<IEnumerable<TEntity>> GetAllAsync()
         {
             return await Task.Run(() => FakeData);
         }
 
-        public override async Task<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter)
+        public override async ValueTask<IEnumerable<TEntity>> GetAllAsync(Expression<Func<TEntity, bool>> filter)
         {
             return await Task.Run(() => filter == null ? FakeData : FakeData.Where(filter.Compile()));
         }
 
-        public override async Task<IEnumerable<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null)
+        public override async ValueTask<IEnumerable<TEntity>> GetAllAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
             return await Task.Run(() =>
             {
@@ -107,7 +129,7 @@ namespace MyBoilerPlate.Tests.Fake
             });
         }
 
-        public override async Task<IEnumerable<TResult>> GetAllAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
+        public override async ValueTask<IEnumerable<TResult>> GetAllAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
             return await Task.Run(() =>
             {
@@ -115,18 +137,18 @@ namespace MyBoilerPlate.Tests.Fake
 
                 var data = filter == null ? query : query.Where(filter);
 
-                var notSortedResults = transform(query);
+                var notSortedResults = transform(data);
 
                 return notSortedResults.ToList();
             });
         }
 
-        public override async Task<IPagedList<TEntity>> GetPagedAsync(int pageIndex, int pageSize)
+        public override async ValueTask<IPagedList<TEntity>> GetPagedAsync(int pageIndex, int pageSize)
         {
             return await Task.Run(() => new PagedList<TEntity>(FakeData, pageIndex, pageSize));
         }
 
-        public override async Task<IPagedList<TEntity>> GetPagedAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null, int pageIndex = -1, int pageSize = -1)
+        public override async ValueTask<IPagedList<TEntity>> GetPagedAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null, int pageIndex = -1, int pageSize = -1)
         {
             return await Task.Run(() =>
             {
@@ -140,7 +162,7 @@ namespace MyBoilerPlate.Tests.Fake
             });
         }
 
-        public override async Task<IPagedList<TResult>> GetPagedAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null, int pageIndex = -1, int pageSize = -1)
+        public override async ValueTask<IPagedList<TResult>> GetPagedAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null, int pageIndex = -1, int pageSize = -1)
         {
             return await Task.Run(() =>
             {
@@ -154,7 +176,7 @@ namespace MyBoilerPlate.Tests.Fake
             });
         }
 
-        public override async Task<int> GetCountAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
+        public override async ValueTask<int> GetCountAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
             return await Task.Run(() =>
             {
@@ -162,39 +184,23 @@ namespace MyBoilerPlate.Tests.Fake
 
                 var data = filter == null ? query : query.Where(filter);
 
-                return transform(query).Count();
+                return transform(data).Count();
             });
         }
 
-        public override async Task<TEntity> GetSingleAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null)
+        public override async ValueTask<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter = null)
         {
             return await Task.Run(() =>
             {
                 var query = FakeData.AsQueryable();
 
-                var data = filter == null ? query : query.Where(filter);
+                var result = query.Any(filter);
 
-                var notSortedResults = transform(data);
-
-                return notSortedResults.FirstOrDefault();
+                return result;
             });
         }
 
-        public override async Task<TResult> GetSingleAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
-        {
-            return await Task.Run(() =>
-            {
-                var query = FakeData.AsQueryable();
-
-                var data = filter == null ? query : query.Where(filter);
-
-                var notSortedResults = transform(data);
-
-                return notSortedResults.FirstOrDefault();
-            });
-        }
-
-        public override async Task<bool> ExistsAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null)
+        public override async ValueTask<bool> ExistsAsync(Func<IQueryable<TEntity>, IQueryable<TEntity>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
             return await Task.Run(() =>
             {
@@ -208,7 +214,7 @@ namespace MyBoilerPlate.Tests.Fake
             });
         }
 
-        public override async Task<bool> ExistsAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
+        public override async ValueTask<bool> ExistsAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
         {
             return await Task.Run(() =>
             {
@@ -222,25 +228,23 @@ namespace MyBoilerPlate.Tests.Fake
             });
         }
 
-        private TEntity ResolveIdentityProperties(TEntity entity)
+        private static TEntity ResolveIdentityProperties(TEntity entity)
         {
             PropertyInfo[] properties = typeof(TEntity).GetProperties();
-            foreach(PropertyInfo property in properties)
+            foreach (PropertyInfo property in properties)
             {
-                var attribute = Attribute.GetCustomAttribute(property, typeof(DatabaseGeneratedAttribute)) as DatabaseGeneratedAttribute;
-
-                if(attribute != null) // This property has a DatabaseGeneratedAttribute
+                if (Attribute.GetCustomAttribute(property, typeof(DatabaseGeneratedAttribute)) is DatabaseGeneratedAttribute attribute)
                 {
-                    if(attribute.DatabaseGeneratedOption == DatabaseGeneratedOption.Identity)
+                    if (attribute.DatabaseGeneratedOption == DatabaseGeneratedOption.Identity)
                     {
                         var propTypeName = property.PropertyType.Name.ToLower();
 
-                        switch(propTypeName)
+                        switch (propTypeName)
                         {
                             case "int32":
                             case "int64":
                             case "decimal":
-                                Random r = new Random();
+                                var r = new Random();
                                 int rInt = r.Next(100000000, 200000000);
 
                                 property.SetValue(entity, rInt, null);

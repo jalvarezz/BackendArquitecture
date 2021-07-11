@@ -25,7 +25,7 @@ namespace MyBoilerPlate.Data.Initializers
                     FirstName = "John",
                     LastName = "Doe",
                     EmployeeTypeId = 1,
-                    Deferred = false
+                    IsDeleted = false
                 });
 
                 _Context.Employees.Add(new Employee
@@ -33,7 +33,7 @@ namespace MyBoilerPlate.Data.Initializers
                     FirstName = "Karen",
                     LastName = "Diaz",
                     EmployeeTypeId = 2,
-                    Deferred = false
+                    IsDeleted = false
                 });
 
                 await _Context.SaveChangesAsync();

@@ -23,7 +23,7 @@ namespace MyBoilerPlate.Web.Infrastructure
     {
         private readonly IEnumerable<Claim> _Claims;
         private readonly IServiceProvider _ServiceLocator;
-        private readonly AppSettings _AppSettings;
+        private IAuthorizationEngine _AuthorizationEngine;
 
         public Guid UserId
         {
@@ -103,10 +103,10 @@ namespace MyBoilerPlate.Web.Infrastructure
             }
         }
 
-        public UserProfile(IHttpContextAccessor httpContextAccessor, IServiceProvider serviceLocator, AppSettings appSettings)
+        public UserProfile(IHttpContextAccessor httpContextAccessor, IServiceProvider serviceLocator)
         {
             IHttpContextAccessor context;
-            if(httpContextAccessor.HttpContext.RequestServices != null)
+            if (httpContextAccessor.HttpContext.RequestServices != null)
             {
                 context = (IHttpContextAccessor)httpContextAccessor.HttpContext.RequestServices.GetService(typeof(IHttpContextAccessor));
             }
@@ -120,27 +120,21 @@ namespace MyBoilerPlate.Web.Infrastructure
 
             this._Claims = context.HttpContext.User.Claims;
             this._ServiceLocator = serviceLocator;
-            this._AppSettings = appSettings;
         }
 
-        public bool HasPermission(string permissionName)
+        public async Task<bool> HasPermissionAsync(string permissionName)
         {
-            return GetAuthorizationEngine().GetUserAndRolePermissions(_AppSettings.ApplicationId, this.UserId).Result.Any(x => x == permissionName);
-        }
+            //TODO: Call the engine that validate the permission here
 
-        private IAuthorizationEngine _AuthorizationEngine;
+            return true;
+        }
 
         private IAuthorizationEngine GetAuthorizationEngine()
         {
-            ////Sample
-            //if(_AuthorizationEngine == null)
-            //    _AuthorizationEngine = (IAuthorizationEngine)this._ServiceLocator.GetService(typeof(IAuthorizationEngine));
+            if (_AuthorizationEngine == null)
+                _AuthorizationEngine = (IAuthorizationEngine)this._ServiceLocator.GetService(typeof(IAuthorizationEngine));
 
-            //return _AuthorizationEngine;
-
-
-            //Retrieve the engine that validate the permissions
-            throw new NotImplementedException();
+            return _AuthorizationEngine;
         }
     }
 }

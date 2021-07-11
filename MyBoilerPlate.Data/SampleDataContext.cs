@@ -58,14 +58,6 @@ namespace MyBoilerPlate.Data
             //TODO: Map Composite Keys Entities Here
             //TODO: Set the .HasNoKey() to views and stored procedures
 
-            //This lines map a DB funcion so we can call it inside the linq or lambda function that executes a query to the DB
-            modelBuilder.HasDbFunction(typeof(SampleDataContextFunctions).GetMethod(nameof(SampleDataContextFunctions.CalcuateAgeInYearsMonths)))
-            .HasTranslation(args => SqlFunctionExpression.Create("dbo",
-                                                                 "f_CalcuateAgeInYearsMonths",
-                                                                 args,
-                                                                 typeof(decimal?),
-                                                                 null));
-
             //Disable the cascade delete behavior
             var cascadeFKs = modelBuilder.Model.GetEntityTypes().SelectMany(t => t.GetForeignKeys())
                             .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);

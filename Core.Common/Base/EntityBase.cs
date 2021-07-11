@@ -5,6 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Core.Common.Extensions;
 using System;
+using System.Text.Json.Serialization;
+using Core.Common.Contracts;
 
 namespace Core.Common.Base
 {
@@ -19,55 +21,63 @@ namespace Core.Common.Base
     [DataContract]
     public abstract class EntityBase<T> : EntityBase, IExtensibleDataObject, IEquatable<T>
     {
+        #region Property Change Notification
+
+
+        #endregion
+
         #region IExtensibleDataObject Members
 
         [IgnoreDataMember]
         [NotMapped]
+        [JsonIgnore]
         public ExtensionDataObject ExtensionData { get; set; }
 
         #endregion
 
         public override bool Equals(object obj)
         {
-            if(obj.GetType() == typeof(T))
-                return this.Equals((T)obj);
+            if (!(obj is T))
+                return false;
 
-            return false;
+            return this.Equals((T)obj);
         }
 
-        public bool Equals(T x)
+        public bool Equals(T other)
         {
             //create variables to store object values
-            object value1 = null, value2 = null;
+            object value1, value2;
 
-            PropertyInfo[] properties = x.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            PropertyInfo[] properties = other.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
 
             //get all public properties of the object using reflection  
-            foreach(PropertyInfo propertyInfo in properties)
+            foreach (PropertyInfo propertyInfo in properties)
             {
                 //get the property values of both the objects
-                value1 = propertyInfo.GetValue(x, null);
+                value1 = propertyInfo.GetValue(other, null);
                 value2 = propertyInfo.GetValue(this, null);
 
-                if(Equals(value1, value2))
-                    continue;
-                else
+                if (!Equals(value1, value2))
                     return false;
             }
 
             return true;
         }
 
-        public int GetHashCode(T obj)
+        public override int GetHashCode()
         {
             int hashCode = this.GetHashCodeOnProperties();
             return hashCode;
         }
+    }
 
-        public override int GetHashCode()
-        {
-            return this.GetHashCode((T)Convert.ChangeType(this, typeof(T)));
-        }
+    [DataContract]
+    public abstract class EntityBase<T, TKey> : EntityBase<T>, IIdentifiableEntity<TKey>
+    {
+        [NotMapped]
+        [IgnoreDataMember]
+        [JsonIgnore]
+        public virtual TKey EntityId { get; set; }
     }
 
     [DataContract]

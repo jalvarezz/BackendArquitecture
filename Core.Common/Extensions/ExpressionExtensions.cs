@@ -12,7 +12,7 @@ namespace Core.Common.Extensions
 
             MemberExpression memExp = null;
 
-            foreach (string part in propertyName.Split('.'))
+            foreach (String part in propertyName.Split('.'))
             {
                 if (memExp == null)
                     memExp = Expression.Property(parameter, part);
@@ -29,7 +29,7 @@ namespace Core.Common.Extensions
 
             PropertyInfo info = null;
             
-            foreach (string part in propertyName.Split('.'))
+            foreach (String part in propertyName.Split('.'))
             {
                 if (info == null)
                 {

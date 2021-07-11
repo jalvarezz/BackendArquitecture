@@ -16,6 +16,8 @@ using System.Collections.Generic;
 using MyBoilerPlate.Web.Infrastructure;
 using MyBoilerPlate.Business.Engines.Contracts;
 using MyBoilerPlate.Web.Infrastructure.Settings;
+using System.ComponentModel.DataAnnotations;
+using MyBoilerPlate.Tests.Fake.Engines;
 
 namespace MyBoilerPlate.Tests
 {
@@ -36,23 +38,23 @@ namespace MyBoilerPlate.Tests
             var installers = typeof(Startup).Assembly.ExportedTypes.Where(x => installerTypes.Contains(x) && typeof(IInstaller).IsAssignableFrom(x) &&
                 !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance).Cast<IInstaller>().ToList();
 
-            var commonInstallers = typeof(MyBoilerPlate.Web.Infrastructure.Installers.DefaultInstaller).Assembly.ExportedTypes.Where(x => installerTypes.Contains(x) && typeof(IInstaller).IsAssignableFrom(x) &&
+            var commonInstallers = typeof(Web.Infrastructure.Installers.DefaultInstaller).Assembly.ExportedTypes.Where(x => installerTypes.Contains(x) && typeof(IInstaller).IsAssignableFrom(x) &&
                 !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance).Cast<IInstaller>().ToList();
 
             var testInstallers = typeof(TestBase).Assembly.ExportedTypes.Where(x => installerTypes.Contains(x) && typeof(IInstaller).IsAssignableFrom(x) &&
                 !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance).Cast<IInstaller>().ToList();
 
-            if(commonInstallers.Count > 0)
+            if (commonInstallers.Count > 0)
                 installers.AddRange(commonInstallers);
 
-            if(testInstallers.Count > 0)
+            if (testInstallers.Count > 0)
                 installers.AddRange(testInstallers);
 
             installers.ForEach(installer => installer.InstallServices(services, configuration));
 
-            if(installApiControllers)
+            if (installApiControllers)
             {
-                var controllerBaseType = typeof(MyBoilerPlate.Web.Infrastructure.ApiControllerBase);
+                var controllerBaseType = typeof(ApiControllerBase);
 
                 var controllerTypes = typeof(Startup).Assembly.DefinedTypes.Where(x => x != controllerBaseType &&
                     controllerBaseType.IsAssignableFrom(x)).ToList();
@@ -70,7 +72,7 @@ namespace MyBoilerPlate.Tests
 
             IList<Claim> claimCollection = new List<Claim>
                 {
-                    new Claim("sub", "D5CD2754-ED7D-4A5E-A306-11C55711E889") //Test User UNIQUE ID
+                    new Claim("sub", "d9527ab2-94b3-4f4a-a4c3-69fa94eba8e2") //Test User UNIQUE ID
                 };
 
             var identityMock = new Mock<ClaimsIdentity>();
@@ -80,13 +82,17 @@ namespace MyBoilerPlate.Tests
             cp.Setup(m => m.HasClaim(It.IsAny<string>(), It.IsAny<string>())).Returns(true);
             cp.Setup(m => m.Identity).Returns(identityMock.Object);
 
-            cp.SetupGet(m => m.Claims).Returns(() => {
+            cp.SetupGet(m => m.Claims).Returns(() =>
+            {
                 var result = new List<Claim>();
 
                 result.AddRange(claimCollection);
 
-                if(this.UserClaims != null)
+                if (this.UserClaims != null)
                     result.AddRange(this.UserClaims());
+
+                if (result.Count(x => x.Type == "sub") > 1)
+                    result.RemoveAt(result.FindIndex(x => x.Type == "sub"));
 
                 return result;
             });
@@ -95,41 +101,38 @@ namespace MyBoilerPlate.Tests
             hc.Setup(h => h.User).Returns(cp.Object);
 
             _MockHttpcontext.Setup(h => h.HttpContext).Returns(hc.Object);
-            
-            services.AddScoped<IUserProfile>(serviceProvider => 
-            {
-                var appSettings = serviceProvider.GetService<AppSettings>();
 
-                return new UserProfile(_MockHttpcontext.Object, serviceProvider, appSettings);
+            services.AddScoped<IUserProfile>(serviceProvider =>
+            {
+                return new UserProfile(_MockHttpcontext.Object, serviceProvider);
             });
 
-            services.AddScoped<IServiceProvider>(serviceProvider => serviceProvider);
+            services.AddScoped<IAuthorizationEngine>(serviceProvider => new AuthorizationFakeEngine(serviceProvider, this.UserPermissions));
+
+            services.AddScoped(serviceProvider => serviceProvider);
 
             // Build the service provider
             ObjectContainer = services.BuildServiceProvider();
         }
 
-        public void NoExceptionThrown<T>(Action codeToExecute) where T : Exception
+        protected IUserProfile BuildUserProfile(IList<Claim> claims, params string[] permissions)
         {
-            try
-            {
-                codeToExecute();
-            }
-            catch(T ex)
-            {
-                Debug.WriteLine(ex.Message);
+            //Set UserProfile claims
+            if (claims != null && claims.Count > 0)
+                UserClaims = () => claims;
 
-                Assert.Fail("Expected no {0} to be thrown.", typeof(T).Name);
-            }
+            UserPermissions = () => permissions;
+
+            return ObjectContainer.GetService<IUserProfile>();
         }
 
         protected IUserProfile BuildUserProfile(IList<Claim> claims, List<string> permissions = null)
         {
             //Set UserProfile claims
-            if(claims != null && claims.Count > 0)
+            if (claims != null && claims.Count > 0)
                 this.UserClaims = () => claims;
 
-            if(permissions != null)
+            if (permissions != null)
                 this.UserPermissions = () => permissions.ToArray();
 
             return ObjectContainer.GetService<IUserProfile>();
@@ -139,8 +142,44 @@ namespace MyBoilerPlate.Tests
         {
             this.UserClaims = () => claims;
 
-            if(permissions != null)
+            if (permissions != null)
                 this.UserPermissions = () => permissions.ToArray();
+        }
+
+        public void NoExceptionThrown<T>(Action codeToExecute) where T : Exception
+        {
+            try
+            {
+                codeToExecute();
+            }
+            catch (T ex)
+            {
+                Debug.WriteLine(ex.Message);
+
+                Assert.Fail("Expected no {0} to be thrown.", typeof(T).Name);
+            }
+        }
+
+        public void TestRepo<T>() where T : class, new()
+        {
+            IDataRepository<T> repo = ObjectContainer.GetService<IDataRepository<T>>();
+
+            Debug.WriteLine($"Testing {typeof(T).Name} Repository");
+
+            NoExceptionThrown<Exception>(async () => { await repo.GetAsync(x => x); });
+        }
+
+        protected IList<ValidationResult> ValidateModel(object model)
+        {
+            var validationResults = new List<ValidationResult>();
+            var ctx = new ValidationContext(model, null, null);
+            Validator.TryValidateObject(model, ctx, validationResults, true);
+            return validationResults;
+        }
+
+        protected bool TryValidateModel(object model)
+        {
+            return !ValidateModel(model).Any();
         }
     }
 }
