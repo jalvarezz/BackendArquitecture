@@ -16,7 +16,6 @@ using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using MyBoilerPlate.Business.Entities;
 using System.Threading.Tasks;
 using System.Threading;
-//using TechAssist.Business.Entities.DTOs;
 
 namespace MyBoilerPlate.Data
 {
@@ -48,6 +47,8 @@ namespace MyBoilerPlate.Data
 
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<EmployeeType> EmployeeTypes { get; set; }
+        public virtual DbSet<Application> Applications { get; set; }
+        public virtual DbSet<ApplicationKey> ApplicationKeys { get; set; }
 
         #endregion
 
@@ -65,8 +66,6 @@ namespace MyBoilerPlate.Data
             foreach (var fk in cascadeFKs)
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
 
-
-            modelBuilder.Ignore<ExtensionDataObject>();
             base.OnModelCreating(modelBuilder);
         }
 

@@ -15,7 +15,6 @@
     <ProjectReference Include="..\Core.Common\Core.Common.csproj" />
     <ProjectReference Include="..\MyBoilerPlate.Business.Entities\MyBoilerPlate.Business.Entities.csproj" />
     <ProjectReference Include="..\MyBoilerPlate.Gateways.AWS\MyBoilerPlate.Gateways.AWS.csproj" />
-    <ProjectReference Include="..\MyBoilerPlate.Gateways.NeverBounce\MyBoilerPlate.Gateways.NeverBounce.csproj" />
     <ProjectReference Include="..\MyBoilerPlate.Gateways.ReportServer\MyBoilerPlate.Gateways.ReportServer.csproj" />
     <ProjectReference Include="..\MyBoilerPlate.Gateways.Twilio\MyBoilerPlate.Gateways.Twilio.csproj" />
   </ItemGroup>

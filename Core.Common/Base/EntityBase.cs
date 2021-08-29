@@ -19,19 +19,10 @@ namespace Core.Common.Base
     /// Base client applied to the Business Entities
     /// </summary>
     [DataContract]
-    public abstract class EntityBase<T> : EntityBase, IExtensibleDataObject, IEquatable<T>
+    public abstract class EntityBase<T> : EntityBase, IEquatable<T>
     {
         #region Property Change Notification
 
-
-        #endregion
-
-        #region IExtensibleDataObject Members
-
-        [IgnoreDataMember]
-        [NotMapped]
-        [JsonIgnore]
-        public ExtensionDataObject ExtensionData { get; set; }
 
         #endregion
 

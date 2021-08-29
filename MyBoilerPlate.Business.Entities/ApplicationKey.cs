@@ -8,7 +8,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Text.Json.Serialization;
 
-namespace MyBoilerPlate.Business.Entities.IDENTITY
+namespace MyBoilerPlate.Business.Entities
 {
     [Table("ApplicationKey")]
     public class ApplicationKey : AuditableEntityBase<ApplicationKey>, IDeleteableEntity, IAuditableEntity

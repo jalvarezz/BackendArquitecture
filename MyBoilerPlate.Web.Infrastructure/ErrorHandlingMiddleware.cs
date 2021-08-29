@@ -44,141 +44,134 @@ namespace MyBoilerPlate.Web.Infrastructure
 
             var responseModel = new ApiErrorResponseModel();
 
-            if(exception is SecurityException)
+            switch (exception)
             {
-                message = "Acceso no autorizado.";
+                case SecurityException _:
+                    message = "Acceso no autorizado.";
 
-                code = HttpStatusCode.Unauthorized;
-            }
-            else if(exception is AggregateException)
-            {
-                if(!string.IsNullOrEmpty(exception.Message))
-                {
-                    message = "El PEI Solicitado no ha sido creado.";
+                    code = HttpStatusCode.Unauthorized;
+                    break;
+                case AggregateException _:
+                    if (!string.IsNullOrEmpty(exception.Message))
+                    {
+                        message = "Ocurrieron fallas multiples.";
+
+                        code = HttpStatusCode.BadRequest;
+                    }
+                    break;
+                case SecurityCustomException _:
+                    if (!string.IsNullOrEmpty(exception.Message))
+                    {
+                        message = exception.Message;
+                    }
+
+                    code = HttpStatusCode.Unauthorized;
+                    break;
+                case ArgumentNullException _:
+                    if (!string.IsNullOrEmpty(exception.Message))
+                    {
+                        message = exception.Message;
+                    }
+                    else
+                    {
+                        message = "Error en parámetros recibidos.";
+                    }
 
                     code = HttpStatusCode.BadRequest;
-                }
-            }
-            else if(exception is SecurityCustomException)
-            {
-                if(!string.IsNullOrEmpty(exception.Message))
-                {
-                    message = exception.Message;
-                }
+                    break;
+                case ModelValidationException _:
+                    if (string.IsNullOrEmpty(exception.Message))
+                    {
+                        message = "Error en parámetros recibidos.";
+                    }
 
-                code = HttpStatusCode.Unauthorized;
-            }
-            else if(exception is ArgumentNullException)
-            {
-                if(!string.IsNullOrEmpty(exception.Message))
-                {
-                    message = exception.Message;
-                }
-                else
-                {
-                    message = "Error en parámetros recibidos.";
-                }
+                    responseModel.Errors = ((ModelValidationException)exception).Errors;
 
-                code = HttpStatusCode.BadRequest;
-            }
-            else
-            {
-                switch(exception)
-                {
-                    case ModelValidationException _:
-                        if(string.IsNullOrEmpty(exception.Message))
-                        {
-                            message = "Error en parámetros recibidos.";
-                        }
+                    code = HttpStatusCode.BadRequest;
+                    break;
+                case System.InvalidOperationException _:
+                    if (!string.IsNullOrEmpty(exception.Message))
+                    {
+                        message = exception.Message;
+                    }
+                    else
+                    {
+                        message = "Operación inválida.";
+                    }
 
-                        responseModel.Errors = ((ModelValidationException)exception).Errors;
+                    code = HttpStatusCode.BadRequest;
+                    break;
+                case ArgumentException _:
+                    if (!string.IsNullOrEmpty(exception.Message))
+                    {
+                        message = exception.Message;
+                    }
+                    else
+                    {
+                        message = "Error en parámetros recibidos.";
+                    }
 
-                        code = HttpStatusCode.BadRequest;
-                        break;
-                    case System.InvalidOperationException _:
-                        if(!string.IsNullOrEmpty(exception.Message))
-                        {
-                            message = exception.Message;
-                        }
-                        else
-                        {
-                            message = "Operación inválida.";
-                        }
+                    code = HttpStatusCode.BadRequest;
+                    break;
+                case ValidationException _:
+                    if (!string.IsNullOrEmpty(exception.Message))
+                    {
+                        message = exception.Message;
+                    }
+                    else
+                    {
+                        message = "Operación inválida.";
+                    }
 
-                        code = HttpStatusCode.BadRequest;
-                        break;
-                    case ArgumentException _:
-                        if(!string.IsNullOrEmpty(exception.Message))
-                        {
-                            message = exception.Message;
-                        }
-                        else
-                        {
-                            message = "Error en parámetros recibidos.";
-                        }
+                    messageCode = ((ValidationException)exception).Code;
+                    code = HttpStatusCode.BadRequest;
+                    break;
+                case NotFoundException _:
+                    if (!string.IsNullOrEmpty(exception.Message))
+                    {
+                        message = exception.Message;
+                    }
 
-                        code = HttpStatusCode.BadRequest;
-                        break;
-                    case ValidationException _:
-                        if(!string.IsNullOrEmpty(exception.Message))
-                        {
-                            message = exception.Message;
-                        }
-                        else
-                        {
-                            message = "Operación inválida.";
-                        }
+                    code = HttpStatusCode.NotFound;
 
-                        messageCode = ((ValidationException)exception).Code;
-                        code = HttpStatusCode.BadRequest;
-                        break;
-                    case NotFoundException _:
-                        if(!string.IsNullOrEmpty(exception.Message))
-                        {
-                            message = exception.Message;
-                        }
+                    Log.Error(exception, exception.Message, exception);
+                    break;
+                case ProfileNotFoundException _:
+                    if (!string.IsNullOrEmpty(exception.Message))
+                    {
+                        message = exception.Message;
+                    }
 
-                        code = HttpStatusCode.NotFound;
+                    code = HttpStatusCode.BadRequest;
 
-                        Log.Error(exception, exception.Message, exception);
-                        break;
-                    case ProfileNotFoundException _:
-                        if(!string.IsNullOrEmpty(exception.Message))
-                        {
-                            message = exception.Message;
-                        }
+                    Log.Error(exception, exception.Message, exception);
+                    break;
+                case UriFormatException _:
+                    message = "Formato de ruta inválido.";
 
-                        code = HttpStatusCode.BadRequest;
+                    code = HttpStatusCode.BadRequest;
 
-                        Log.Error(exception, exception.Message, exception);
-                        break;
-                    case UriFormatException _:
-                        message = "Formato de ruta inválido.";
+                    Log.Error(exception, exception.Message, exception);
+                    break;
+                case HttpRequestException _:
+                    message = "Error de comunicación.";
 
-                        code = HttpStatusCode.BadRequest;
+                    code = HttpStatusCode.BadRequest;
 
-                        Log.Error(exception, exception.Message, exception);
-                        break;
-                    case HttpRequestException _:
-                        message = "Error de comunicación.";
+                    Log.Error(exception, exception.Message, exception);
+                    break;
+                case EntityValidationException _:
+                    code = HttpStatusCode.InternalServerError;
+                    break;
+                case StorageException _:
+                case DatabaseException _:
+                    code = HttpStatusCode.InternalServerError;
 
-                        code = HttpStatusCode.BadRequest;
-
-                        Log.Error(exception, exception.Message, exception);
-                        break;
-                    case EntityValidationException _:
-                        code = HttpStatusCode.InternalServerError;
-                        break;
-                    case StorageException _:
-                    case DatabaseException _:
-                        code = HttpStatusCode.InternalServerError;
-
-                        Log.Error(exception, exception.Message, exception);
-                        break;
-                    default:
-                        Log.Error(exception, exception.Message, exception);
-                        break;
-                }
+                    Log.Error(exception, exception.Message, exception);
+                    break;
+                default:
+                    Log.Error(exception, exception.Message, exception);
+                    break;
             }
 
             responseModel.MessageCode = messageCode;

@@ -13,9 +13,9 @@ using Core.Common.Contracts;
 using System.Linq;
 using static System.Net.Mime.MediaTypeNames;
 using Serilog;
-using MyBoilerPlate.Business.Entities.IDENTITY;
 using MyBoilerPlate.Web.Models;
 using System.Net.Mime;
+using MyBoilerPlate.Business.Entities;
 
 namespace MyBoilerPlate.Web.Infrastructure.Policy
 {

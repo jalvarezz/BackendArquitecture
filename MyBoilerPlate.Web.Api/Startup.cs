@@ -46,7 +46,7 @@ namespace MyBoilerPlate.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, EmployeeInitializer employeeInitializer, EmployeeTypeInitializer employeeTypeInitializer)
         {
-            if (env.IsDevelopment() || env.EnvironmentName == "SprintBuildDev")
+            if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -55,6 +55,15 @@ namespace MyBoilerPlate.Web
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1");
                 });
             }
+
+            // Prevent ClickJacking (Prevent rendering into an iFrame)
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("X-Frame-Options", "DENY");
+                await next();
+            });
+
+            app.UseHsts();
 
             var corsSettings = app.ApplicationServices.GetService<CorsSetting>();
 
@@ -66,6 +75,8 @@ namespace MyBoilerPlate.Web
             });
 
             app.UseHttpsRedirection();
+
+            app.UseAntiXssMiddleware();
 
             app.UseRouting();
 
