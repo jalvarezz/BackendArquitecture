@@ -1,6 +1,6 @@
 ﻿namespace MyBoilerPlate.Gateways.ReportServer
 {
-    public class ReportServerSetting
+    public class ReportServerSettings
     {
         public string ServiceUrl { get; set; }
         public string ExecutionUrl { get; set; }

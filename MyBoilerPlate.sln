@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29123.88
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{1F008834-67CA-4C87-90CC-8B770264993D}"
 EndProject
@@ -38,6 +38,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBoilerPlate.Gateways.AWS", "MyBoilerPlate.Gateways.AWS\MyBoilerPlate.Gateways.AWS.csproj", "{EE41DA2B-39B4-411C-BC99-4E7B10A5ABC3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyBoilerPlate.Gateways.Twilio", "MyBoilerPlate.Gateways.Twilio\MyBoilerPlate.Gateways.Twilio.csproj", "{1A2567A5-F0D4-4B4A-941A-340398D212B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyBoilerPlate.Gateways.Firebase", "MyBoilerPlate.Gateways.Firebase\MyBoilerPlate.Gateways.Firebase.csproj", "{67B8F4B6-D193-41FC-A775-D81572ABAC8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -243,6 +245,22 @@ Global
 		{1A2567A5-F0D4-4B4A-941A-340398D212B6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1A2567A5-F0D4-4B4A-941A-340398D212B6}.Training|Any CPU.ActiveCfg = Debug|Any CPU
 		{1A2567A5-F0D4-4B4A-941A-340398D212B6}.Training|Any CPU.Build.0 = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.DatabaseBuild|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.DatabaseBuild|Any CPU.Build.0 = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.Produccion|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.Produccion|Any CPU.Build.0 = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.QA_DE|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.QA_DE|Any CPU.Build.0 = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.QA_NEXT|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.QA_NEXT|Any CPU.Build.0 = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.QA|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.QA|Any CPU.Build.0 = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.Training|Any CPU.ActiveCfg = Debug|Any CPU
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C}.Training|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -260,6 +278,7 @@ Global
 		{9B7F3E07-1E23-44FC-879B-85AE0E2600D3} = {77F7E231-1793-40B8-A147-18F7A5A4FBF1}
 		{EE41DA2B-39B4-411C-BC99-4E7B10A5ABC3} = {B23137A6-0670-4F33-B96D-C4CF0F21678D}
 		{1A2567A5-F0D4-4B4A-941A-340398D212B6} = {B23137A6-0670-4F33-B96D-C4CF0F21678D}
+		{67B8F4B6-D193-41FC-A775-D81572ABAC8C} = {B23137A6-0670-4F33-B96D-C4CF0F21678D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {456EC5B0-50C8-464E-9EFA-FA3B0AB032DB}

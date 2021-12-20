@@ -2,11 +2,9 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Twilio" Version="5.69.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core.Common\Core.Common.csproj" />

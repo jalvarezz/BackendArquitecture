@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.0.40" />
-    <PackageReference Include="MimeKit" Version="2.13.0" />
+    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.0.107" />
+    <PackageReference Include="MimeKit" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>

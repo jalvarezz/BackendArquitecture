@@ -24,7 +24,7 @@ namespace MyBoilerPlate.Gateways.ReportServer
         private readonly string _DataSourcePassword;
         private readonly string _DataSourceExtension;
 
-        public ReportServerGateway(ReportServerSetting settings)
+        public ReportServerGateway(ReportServerSettings settings)
         {
             _ServiceUrl = settings.ServiceUrl;
             _ExecutionUrl = settings.ExecutionUrl;
