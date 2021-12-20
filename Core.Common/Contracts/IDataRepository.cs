@@ -27,6 +27,8 @@ namespace Core.Common.Contracts
 
         ValueTask<T> UpdateAsync(T entity);
 
+        ValueTask<TResult> GetAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null);
+
         ValueTask<IEnumerable<T>> GetAllAsync();
 
         ValueTask<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> filter);
@@ -42,8 +44,6 @@ namespace Core.Common.Contracts
         ValueTask<IPagedList<TResult>> GetPagedAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null, int pageIndex = -1, int pageSize = -1);
 
         ValueTask<int> GetCountAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null);
-
-        ValueTask<TResult> GetAsync<TResult>(Func<IQueryable<T>, IQueryable<TResult>> transform, Expression<Func<T, bool>> filter = null);
 
         ValueTask<bool> ExistsAsync(Expression<Func<T, bool>> filter = null);
 

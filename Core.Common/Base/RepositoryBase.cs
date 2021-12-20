@@ -98,6 +98,17 @@ namespace Core.Common.Base
             return entity;
         }
 
+        public virtual async ValueTask<TResult> GetAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
+        {
+            var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
+
+            var notSortedResults = transform(query);
+
+            var result = await notSortedResults.FirstOrDefaultAsync();
+
+            return result;
+        }
+
         public virtual async ValueTask<IEnumerable<TEntity>> GetAllAsync()
         {
             var query = _DbSet.AsNoTracking();
@@ -169,20 +180,6 @@ namespace Core.Common.Base
             var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
 
             return await transform(query).CountAsync();
-        }
-
-        public virtual async ValueTask<TResult> GetAsync<TResult>(Func<IQueryable<TEntity>, IQueryable<TResult>> transform, Expression<Func<TEntity, bool>> filter = null)
-        {
-            TResult result = await Task.Run(async () =>
-            {
-                var query = filter == null ? _DbSet.AsNoTracking() : _DbSet.AsNoTracking().Where(filter);
-
-                var notSortedResults = transform(query);
-
-                return await notSortedResults.FirstOrDefaultAsync();
-            });
-
-            return result;
         }
 
         public virtual async ValueTask<bool> ExistsAsync(Expression<Func<TEntity, bool>> filter = null)
