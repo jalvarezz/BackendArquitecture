@@ -13,40 +13,49 @@ using Microsoft.OpenApi.Models;
 using MyBoilerPlate.Web.Infrastructure.Settings;
 using MyBoilerPlate.Web.Infrastructure.Installers;
 using MyBoilerPlate.Data.Initializers;
+using Serilog;
+using System.IO;
 #endregion
 
 namespace MyBoilerPlate.Web
 {
-    public class Startup
+    public static class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(WebApplicationBuilder builder, IConfiguration configuration, string environment)
         {
+            var confFileName = environment != null ? $"appsettings.{environment}.json" : "appsettings.json";
+
+            builder.Host.UseSerilog((ctx, lc) =>
+            {
+                lc.ReadFrom.Configuration(ctx.Configuration);
+            }).ConfigureAppConfiguration((context, config) =>
+            {
+                config.SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile(confFileName, true)
+                    .AddEnvironmentVariables();
+
+                config.Build();
+            });
+
             var commonInstallers = typeof(DefaultInstaller).Assembly.ExportedTypes.Where(x =>
                 typeof(IInstaller).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance)
                 .Cast<IInstaller>().ToList();
 
-            commonInstallers.ForEach(installer => installer.InstallServices(services, Configuration));
+            commonInstallers.ForEach(installer => installer.InstallServices(builder.Services, configuration));
 
             var installers = typeof(Startup).Assembly.ExportedTypes.Where(x => 
                 typeof(IInstaller).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
                             .Select(Activator.CreateInstance)
                 .Cast<IInstaller>().ToList();
 
-            installers.ForEach(installer => installer.InstallServices(services, Configuration));
+            installers.ForEach(installer => installer.InstallServices(builder.Services, configuration));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, EmployeeInitializer employeeInitializer, EmployeeTypeInitializer employeeTypeInitializer)
+        public static void ConfigureApplication(IApplicationBuilder app, string environment)
         {
-            if (env.IsDevelopment())
+            if (environment == "Development")
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -54,6 +63,10 @@ namespace MyBoilerPlate.Web
                 {
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1");
                 });
+            }
+            else
+            {
+                app.UseHsts();
             }
 
             // Prevent ClickJacking (Prevent rendering into an iFrame)
@@ -90,10 +103,6 @@ namespace MyBoilerPlate.Web
             {
                 endpoints.MapControllers();
             });
-
-            // Uncomment to seed data
-            employeeInitializer.Seed().Wait();
-            employeeTypeInitializer.Seed().Wait();
         }
     }
 }

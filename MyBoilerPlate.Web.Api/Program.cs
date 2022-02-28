@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -15,20 +16,32 @@ namespace MyBoilerPlate.Web
             var confFileName = environment != null ? $"appsettings.{environment}.json" : "appsettings.json";
 
             var configuration = new ConfigurationBuilder()
-                                    .AddJsonFile(confFileName)
-                                    .AddEnvironmentVariables()
-                                    .Build();
+                        .AddJsonFile(confFileName)
+                        .AddEnvironmentVariables()
+                        .Build();
 
             Log.Logger = new LoggerConfiguration()
-                     .ReadFrom.Configuration(configuration)
-                     .CreateLogger();
+                            .ReadFrom.Configuration(configuration)
+                            .CreateLogger();
 
             try
             {
-                var host = CreateHostBuilder(args).Build();
+                Log.Information($"Using settings file {confFileName}");
+                Log.Information("Configuring host...");
+
+                var builder = WebApplication.CreateBuilder(args);
+
+                Startup.ConfigureServices(builder, configuration, environment);
+
+                var app = builder.Build();
+
+                Startup.ConfigureApplication(app, environment);
 
                 Log.Information("Starting host...");
-                host.Run();
+
+                app.Run();
+
+                Log.Information("Host stopped successfully...");
 
                 return 0;
             }
@@ -42,13 +55,5 @@ namespace MyBoilerPlate.Web
                 Log.CloseAndFlush();
             }
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseSerilog()
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
     }
 }
