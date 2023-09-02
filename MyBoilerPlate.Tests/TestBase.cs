@@ -18,6 +18,8 @@ using MyBoilerPlate.Business.Engines.Contracts;
 using MyBoilerPlate.Web.Infrastructure.Settings;
 using System.ComponentModel.DataAnnotations;
 using MyBoilerPlate.Tests.Fake.Engines;
+using MyBoilerPlate.Web.Infrastructure.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace MyBoilerPlate.Tests
 {
@@ -30,27 +32,12 @@ namespace MyBoilerPlate.Tests
 
         protected ServiceProvider ObjectContainer { get; private set; }
 
-        protected void Initialize(IEnumerable<Type> installerTypes, bool installApiControllers = false)
+        protected void Initialize(Action<ServiceCollection, IConfigurationRoot> addServices, bool installApiControllers = false)
         {
             var services = new ServiceCollection();
             var configuration = TestConfigurationBuilder.GetIConfigurationRoot(AppDomain.CurrentDomain.BaseDirectory);
 
-            var installers = typeof(Startup).Assembly.ExportedTypes.Where(x => installerTypes.Contains(x) && typeof(IInstaller).IsAssignableFrom(x) &&
-                !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance).Cast<IInstaller>().ToList();
-
-            var commonInstallers = typeof(Web.Infrastructure.Installers.DefaultInstaller).Assembly.ExportedTypes.Where(x => installerTypes.Contains(x) && typeof(IInstaller).IsAssignableFrom(x) &&
-                !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance).Cast<IInstaller>().ToList();
-
-            var testInstallers = typeof(TestBase).Assembly.ExportedTypes.Where(x => installerTypes.Contains(x) && typeof(IInstaller).IsAssignableFrom(x) &&
-                !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance).Cast<IInstaller>().ToList();
-
-            if (commonInstallers.Count > 0)
-                installers.AddRange(commonInstallers);
-
-            if (testInstallers.Count > 0)
-                installers.AddRange(testInstallers);
-
-            installers.ForEach(installer => installer.InstallServices(services, configuration));
+            addServices(services, configuration);
 
             if (installApiControllers)
             {

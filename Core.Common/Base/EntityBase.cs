@@ -72,6 +72,11 @@ namespace Core.Common.Base
     }
 
     [DataContract]
+    public abstract class OracleEntityBase<T> : EntityBase<T>
+    {
+    }
+
+    [DataContract]
     public class StoredProcedureEntityBase : EntityBase<StoredProcedureEntityBase>
     {
 

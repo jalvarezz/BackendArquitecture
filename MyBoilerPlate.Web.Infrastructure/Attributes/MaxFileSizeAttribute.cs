@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Http;
+using MyBoilerPlate.Business.Contracts;
 using System.ComponentModel.DataAnnotations;
 
 namespace MyBoilerPlate.Web.Infrastructure.Attributes
@@ -7,6 +8,7 @@ namespace MyBoilerPlate.Web.Infrastructure.Attributes
     public sealed class MaxFileSizeAttribute : ValidationAttribute
     {
         private readonly int _MaxFileSize;
+
         public MaxFileSizeAttribute(int maxFileSize)
         {
             _MaxFileSize = maxFileSize;
@@ -15,17 +17,14 @@ namespace MyBoilerPlate.Web.Infrastructure.Attributes
         protected override ValidationResult IsValid(
         object value, ValidationContext validationContext)
         {
-            if(value is IFormFile file && file.Length > _MaxFileSize)
+            if (value is IFormFile file && (file.Length / 1024) > _MaxFileSize)
             {
-                return new ValidationResult(GetErrorMessage());
+                var messageHandler = (IMessageHandler)validationContext.GetService(typeof(IMessageHandler));
+
+                return new ValidationResult(string.Format(messageHandler.GetMessage("0189").Name, _MaxFileSize));
             }
 
             return ValidationResult.Success;
-        }
-
-        public string GetErrorMessage()
-        {
-            return $"Maximum allowed file size is { _MaxFileSize} bytes.";
         }
     }
 }

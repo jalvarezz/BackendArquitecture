@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Core.Common;
+﻿using Core.Common;
 using Core.Common.Contracts;
 using MyBoilerPlate.Business.Contracts;
 using MyBoilerPlate.Business.Engines.Contracts;
@@ -8,9 +7,8 @@ using MyBoilerPlate.Business.Entities.DTOs;
 using MyBoilerPlate.Tests.Helpers;
 using MyBoilerPlate.Tests.Installers;
 using MyBoilerPlate.Web.Api.Controllers;
-using MyBoilerPlate.Web.Api.Infrastructure.Installers;
+using MyBoilerPlate.Web.Api.Infrastructure.Services;
 using MyBoilerPlate.Web.Infrastructure;
-using MyBoilerPlate.Web.Infrastructure.Installers;
 using iText.Kernel.Geom;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +22,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using MyBoilerPlate.Web.Infrastructure.Models;
 using MyBoilerPlate.Web.Models;
+using MyBoilerPlate.Web.Infrastructure.Services;
 
 namespace MyBoilerPlate.Tests.Controller
 {
@@ -37,16 +36,16 @@ namespace MyBoilerPlate.Tests.Controller
         [TestInitialize]
         public void Setup()
         {
-            this.Initialize(new List<Type>()
+            this.Initialize((services, configuration) =>
             {
-                typeof(DefaultInstaller),
-                typeof(HttpContextInstaller),
-                typeof(CacheInstaller),
-                typeof(DataInstaller),
-                typeof(FakeRepositoryInstaller),
-                typeof(EngineInstaller),
-                typeof(HttpClientFactoryInstaller),
-                typeof(AutomapperInstaller)
+                services.AddDefaultServices(configuration);
+                services.AddHttpContextService(configuration);
+                services.AddCacheService(configuration);
+                services.AddDataServices(configuration);
+                services.AddFakeRepositoryServices(configuration);
+                services.AddEngineServices(configuration);
+                services.AddHttpClientFactoryService(configuration);
+                services.AddMapperService(configuration);
             }, true);
 
             _BusinessEngineFactory = ObjectContainer.GetService<IBusinessEngineFactory>();

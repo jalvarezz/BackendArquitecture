@@ -3,6 +3,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
+using MyBoilerPlate.Web.Infrastructure.Services.Contracts;
 
 namespace MyBoilerPlate.Web.Infrastructure.Services
 {

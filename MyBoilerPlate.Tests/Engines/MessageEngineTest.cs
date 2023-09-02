@@ -6,7 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using MyBoilerPlate.Business.Contracts;
 using MyBoilerPlate.Tests;
-using MyBoilerPlate.Web.Infrastructure.Installers;
+using MyBoilerPlate.Web.Infrastructure.Services;
+using MyBoilerPlate.Tests.Installers;
 
 namespace EduEsp.Tests.Engines
 {
@@ -19,10 +20,10 @@ namespace EduEsp.Tests.Engines
         [TestInitialize]
         public void Setup()
         {
-            this.Initialize(new List<Type>()
+            this.Initialize((services, configuration) =>
             {
-                typeof(DefaultInstaller)
-            }, true);
+                services.AddDefaultServices(configuration);
+            });
 
             _ResourceHandler = ObjectContainer.GetService<IMessagesResourceHandler>();
             _MessageHandler = ObjectContainer.GetService<IMessageHandler>();

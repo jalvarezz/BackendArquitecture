@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyBoilerPlate.Business.Entities.DTOs;
-using AutoMapper;
+using MapsterMapper;
 
 namespace MyBoilerPlate.Business.Engines
 {

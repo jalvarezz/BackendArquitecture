@@ -4,8 +4,8 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Reflection;
 using Core.Common.Base;
-using MyBoilerPlate.Web.Infrastructure.Installers;
 using MyBoilerPlate.Business.Entities;
+using MyBoilerPlate.Web.Infrastructure.Services;
 
 namespace MyBoilerPlate.Tests.DB.Entities
 {
@@ -19,8 +19,8 @@ namespace MyBoilerPlate.Tests.DB.Entities
         {
             this.Initialize(new List<Type>()
             {
-                typeof(DataInstaller),
-                typeof(RepositoryInstaller)
+                typeof(DataService),
+                typeof(RepositoryService)
             });
         }
 

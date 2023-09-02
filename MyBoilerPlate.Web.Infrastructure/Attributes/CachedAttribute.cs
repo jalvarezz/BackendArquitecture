@@ -1,5 +1,4 @@
-﻿using MyBoilerPlate.Web.Infrastructure.Services;
-using MyBoilerPlate.Web.Infrastructure.Settings;
+﻿using MyBoilerPlate.Web.Infrastructure.Settings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -9,75 +8,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MyBoilerPlate.Web.Infrastructure.Services.Contracts;
+using MyBoilerPlate.Business.Contracts;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyBoilerPlate.Web.Infrastructure.Attributes
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class CachedAttribute : Attribute, IAsyncActionFilter
+    public sealed class CustomRegularExpressionAttribute : ValidationAttribute
     {
-        private readonly int _TimeToLiveInSeconds;
+        private readonly string _IdMessage;
 
-        public CachedAttribute(int timeToLiveSeconds)
+        private readonly RegularExpressionAttribute _InnerAttribute;
+
+        public CustomRegularExpressionAttribute(string idMessage, string pattern)
         {
-            _TimeToLiveInSeconds = timeToLiveSeconds;
+            _IdMessage = idMessage;
+
+            _InnerAttribute = new RegularExpressionAttribute(pattern);
         }
 
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            //check if the request is cached
-            var cacheSettings = context.HttpContext.RequestServices.GetRequiredService<RedisCacheSettings>();
-
-            if(cacheSettings == null || !cacheSettings.Enabled)
+            if (!_InnerAttribute.IsValid(value))
             {
-                await next();
-                return;
+                var messageHandler = (IMessageHandler)validationContext.GetService(typeof(IMessageHandler));
+
+                throw new ArgumentException(messageHandler.GetMessage(_IdMessage).Name);
             }
 
-            var cacheService = context.HttpContext.RequestServices.GetRequiredService<IResponseCacheService>();
-
-            var cacheKey = GenerateCacheKeyFromRequest(context.HttpContext.Request);
-            var cachedResponse = await cacheService.GetCachedResponseAsync(cacheKey);
-
-            if(!string.IsNullOrEmpty(cachedResponse))
-            {
-                var contentResult = new ContentResult
-                {
-                    Content = cachedResponse,
-                    ContentType = "application/json",
-                    StatusCode = 200
-                };
-
-                context.Result = contentResult;
-
-                return;
-            }
-
-            var executedContext = await next();
-
-            //get the value and cache the response
-            if(executedContext.Result is ObjectResult objectResult)
-            {
-                await cacheService.CacheResponseAsync(cacheKey, objectResult.Value, TimeSpan.FromSeconds(_TimeToLiveInSeconds));
-            }
-        }
-
-        private static string GenerateCacheKeyFromRequest(HttpRequest request)
-        {
-            var keyBuilder = new StringBuilder();
-
-            keyBuilder.Append($"{request.Path}");
-
-            foreach(var (key, value) in request.Query.OrderBy(x => x.Key))
-            {
-                keyBuilder.Append($"|{key}-{value}");
-            }
-
-            foreach(var (key, value) in request.Headers.Where(x => x.Key == "Authorization").OrderBy(x => x.Key))
-            {
-                keyBuilder.Append($"|{key}-{value}");
-            }
-
-            return keyBuilder.ToString();
+            return ValidationResult.Success;
         }
     }
 }

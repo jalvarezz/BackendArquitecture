@@ -1,4 +1,5 @@
-﻿using Core.Common.Contracts;
+﻿using Core.Common.Base;
+using Core.Common.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -26,6 +27,14 @@ namespace MyBoilerPlate.Data
             return instance;
         }
 
+        public IDataRepository<TEntity> GetOracleDataRepository<TEntity>() where TEntity : OracleEntityBase<TEntity>, new()
+        {
+            //Import instance of T from the DI container
+            var instance = _Services.GetService<IOracleDataRepository<TEntity>>();
+
+            return instance;
+        }
+
         public TRepository GetCustomDataRepository<TRepository>() where TRepository : IDataRepository
         {
             //Import instance of the repository from the DI container
@@ -46,13 +55,6 @@ namespace MyBoilerPlate.Data
         {
             //Import instance of T from the DI container
             var instance = _Services.GetService<T>();
-
-            return instance;
-        }
-
-        public IContigencyDataRepository<TEntity> GetContigencyDataRepository<TEntity>() where TEntity : class, new()
-        {
-            var instance = _Services.GetService<IContigencyDataRepository<TEntity>>();
 
             return instance;
         }

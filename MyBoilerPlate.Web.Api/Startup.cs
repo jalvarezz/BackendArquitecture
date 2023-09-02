@@ -11,10 +11,13 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using System.Collections.Generic;
 using Microsoft.OpenApi.Models;
 using MyBoilerPlate.Web.Infrastructure.Settings;
-using MyBoilerPlate.Web.Infrastructure.Installers;
 using MyBoilerPlate.Data.Initializers;
 using Serilog;
 using System.IO;
+using MyBoilerPlate.Web.Infrastructure.Services;
+using MyBoilerPlate.Web.Api.Infrastructure.Services;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using MyBoilerPlate.Web.Infrastructure.Extensions;
 #endregion
 
 namespace MyBoilerPlate.Web
@@ -24,32 +27,23 @@ namespace MyBoilerPlate.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public static void ConfigureServices(WebApplicationBuilder builder, IConfiguration configuration, string environment)
         {
-            var confFileName = environment != null ? $"appsettings.{environment}.json" : "appsettings.json";
+            var configurationFileName = environment != null ? $"appsettings.{environment}.json" : "appsettings.json";
 
-            builder.Host.UseSerilog((ctx, lc) =>
-            {
-                lc.ReadFrom.Configuration(ctx.Configuration);
-            }).ConfigureAppConfiguration((context, config) =>
-            {
-                config.SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile(confFileName, true)
-                    .AddEnvironmentVariables();
+            builder.Services.AddMvcServices(configuration);
+            builder.Services.AddMapperService(configuration);
+            builder.Services.AddSwaggerService(configuration);
 
-                config.Build();
-            });
+            builder.AddLoggingService(configurationFileName);
 
-            var commonInstallers = typeof(DefaultInstaller).Assembly.ExportedTypes.Where(x =>
-                typeof(IInstaller).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance)
-                .Cast<IInstaller>().ToList();
-
-            commonInstallers.ForEach(installer => installer.InstallServices(builder.Services, configuration));
-
-            var installers = typeof(Startup).Assembly.ExportedTypes.Where(x => 
-                typeof(IInstaller).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
-                            .Select(Activator.CreateInstance)
-                .Cast<IInstaller>().ToList();
-
-            installers.ForEach(installer => installer.InstallServices(builder.Services, configuration));
+            builder.Services.AddCacheService(configuration);
+            builder.Services.AddCorsService(configuration);
+            builder.Services.AddDataServices(configuration);
+            builder.Services.AddDefaultServices(configuration);
+            builder.Services.AddEngineServices(configuration);
+            builder.Services.AddGatewayServices(configuration);
+            builder.Services.AddHttpClientFactoryService(configuration);
+            builder.Services.AddHttpContextService(configuration);
+            builder.Services.AddRepositoryServices(configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -102,6 +96,14 @@ namespace MyBoilerPlate.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("/health", new HealthCheckOptions
+                {
+                    ResponseWriter = HealthCheckExtensions.WriteResponse
+                });
+
+                // SignalR Hubs
+                //endpoints.MapHub<SomeHub>("/hubs/some");
+                //endpoints.MapHub<AnotherHub>("/hubs/another");
             });
         }
     }

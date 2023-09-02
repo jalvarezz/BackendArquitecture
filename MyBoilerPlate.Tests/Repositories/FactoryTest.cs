@@ -10,10 +10,11 @@ using MyBoilerPlate.Business.Engines.Contracts;
 using MyBoilerPlate.Business.Entities.DTOs;
 using System.Collections.Generic;
 using MyBoilerPlate.Business;
-using MyBoilerPlate.Web.Api.Infrastructure.Installers;
+using MyBoilerPlate.Web.Api.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
-using MyBoilerPlate.Web.Infrastructure.Installers;
 using System.Threading.Tasks;
+using MyBoilerPlate.Web.Infrastructure.Services;
+using MyBoilerPlate.Tests.Installers;
 
 namespace MyBoilerPlate.Tests.Repositories
 {
@@ -25,11 +26,11 @@ namespace MyBoilerPlate.Tests.Repositories
         [TestInitialize]
         public void Setup()
         {
-            this.Initialize(new List<Type>()
+            this.Initialize((services, configuration) =>
             {
-                typeof(HttpContextInstaller),
-                typeof(DataInstaller),
-                typeof(RepositoryInstaller)
+                services.AddHttpContextService(configuration);
+                services.AddDataServices(configuration);
+                services.AddFakeRepositoryServices(configuration);
             });
 
             _DataRepositoryFactory = ObjectContainer.GetService<IDataRepositoryFactory>();

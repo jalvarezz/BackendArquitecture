@@ -9,18 +9,18 @@ namespace Core.Common.Extensions
     public sealed class AllowedExtensionsAttribute : ValidationAttribute
     {
         private readonly string[] _Extensions;
-        public AllowedExtensionsAttribute(string[] Extensions)
+        public AllowedExtensionsAttribute(string extensions)
         {
-            _Extensions = Extensions;
+            _Extensions = extensions?.Split(",");
         }
 
         protected override ValidationResult IsValid(
         object value, ValidationContext validationContext)
         {
-            if(value is IFormFile file)
+            if (value is IFormFile file)
             {
                 var extension = Path.GetExtension(file.FileName);
-                if(!_Extensions.Contains(extension.ToLower()))
+                if (!_Extensions.Contains(extension.ToLower()))
                 {
                     return new ValidationResult(GetErrorMessage());
                 }

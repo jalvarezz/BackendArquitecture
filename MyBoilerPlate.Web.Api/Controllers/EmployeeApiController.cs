@@ -1,4 +1,3 @@
-using AutoMapper;
 using Core.Common;
 using Core.Common.Contracts;
 using Core.Common.Exceptions;
@@ -18,6 +17,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MyBoilerPlate.Web.Infrastructure.Models;
+using MapsterMapper;
+using MyBoilerPlate.Web.Infrastructure.Constants;
 
 namespace MyBoilerPlate.Web.Api.Controllers
 {
@@ -47,6 +48,7 @@ namespace MyBoilerPlate.Web.Api.Controllers
             _AppSettings = appSettings;
         }
 
+        [Authorize(AuthenticationSchemes = SchemaNames.Bearer, Policy = PolicyNames.WebApi)]
         [Route("")]
         [HttpGet]
         public async Task<PagedListViewModel<EmployeeViewModel>> SearchAsync([FromQuery]string name = null, [FromQuery]string officialDocumentId = null, [FromQuery]int? employeeTypeId = null, [FromQuery]int pageIndex = 1, [FromQuery]int pageSize = 5)
@@ -60,6 +62,7 @@ namespace MyBoilerPlate.Web.Api.Controllers
             return result;
         }
 
+        [Authorize(AuthenticationSchemes = SchemaNames.Bearer, Policy = PolicyNames.WebApi)]
         [Route("")]
         [HttpPost]
         public async Task<EmployeeViewModel> Post([FromBody]EmployeeViewModel model)
@@ -90,6 +93,7 @@ namespace MyBoilerPlate.Web.Api.Controllers
             return result;
         }
 
+        [Authorize(AuthenticationSchemes = SchemaNames.Bearer, Policy = PolicyNames.WebApi)]
         [Route("")]
         [HttpPut]
         public async Task<EmployeeViewModel> Put([FromBody]EmployeeViewModel model)
@@ -120,6 +124,7 @@ namespace MyBoilerPlate.Web.Api.Controllers
             return result;
         }
 
+        [Authorize(AuthenticationSchemes = SchemaNames.Bearer, Policy = PolicyNames.WebApi)]
         [Route("{id}")]
         [HttpDelete]
         public async Task Delete(int id)

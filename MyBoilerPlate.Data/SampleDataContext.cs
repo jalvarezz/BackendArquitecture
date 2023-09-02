@@ -66,7 +66,8 @@ namespace MyBoilerPlate.Data
             foreach (var fk in cascadeFKs)
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
 
-            base.OnModelCreating(modelBuilder);
+            //Ignores
+            modelBuilder.Ignore<ExtensionDataObject>();
         }
 
         #endregion

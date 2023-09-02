@@ -7,13 +7,13 @@ using MyBoilerPlate.Web;
 using System.Linq;
 using MyBoilerPlate.Web.Api;
 using System.Collections.Generic;
-using MyBoilerPlate.Web.Infrastructure.Installers;
 using MyBoilerPlate.Web.Infrastructure;
 using Moq;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using MyBoilerPlate.Web.Infrastructure.Settings;
 using System.Threading.Tasks;
+using MyBoilerPlate.Web.Infrastructure.Services;
 
 namespace MyBoilerPlate.Tests
 {
@@ -28,7 +28,7 @@ namespace MyBoilerPlate.Tests
             var services = new ServiceCollection();
             var configuration = TestConfigurationBuilder.GetIConfigurationRoot(AppDomain.CurrentDomain.BaseDirectory);
 
-            var commonInstallers = typeof(DefaultInstaller).Assembly.ExportedTypes.Where(x =>
+            var commonInstallers = typeof(DefaultService).Assembly.ExportedTypes.Where(x =>
                 typeof(IInstaller).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance)
                 .Cast<IInstaller>().ToList();
 
