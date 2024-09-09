@@ -21,22 +21,16 @@ namespace MyBoilerPlate.Data
 {
     public class SampleDataContext : DbContext
     {
-
-        private readonly IUserProfile _UserProfile;
+        private readonly IHttpContextAccessor _HttpContextAccessor;
 
         private bool CanUseSessionContext { get; set; }
 
         #region Constructors
 
-        public SampleDataContext()
-        {
-            CanUseSessionContext = true;
-        }
-
-        public SampleDataContext(DbContextOptions<SampleDataContext> options, IUserProfile userProfile)
+        public SampleDataContext(DbContextOptions<SampleDataContext> options, IHttpContextAccessor httpContextAccessor)
             : base(options)
         {
-            _UserProfile = userProfile;
+            _HttpContextAccessor = httpContextAccessor;
 
             CanUseSessionContext = true;
         }
@@ -80,6 +74,13 @@ namespace MyBoilerPlate.Data
 
             if (auditableEntitySet != null)
             {
+                Guid? userId = null;
+
+                if (_HttpContextAccessor.HttpContext.User.Claims.Any(x => x.Type == "sub"))
+                {
+                    userId = Guid.Parse(_HttpContextAccessor.HttpContext.User.Claims.First(x => x.Type == "sub").Value);
+                }
+
                 DateTime currentDate = DateTime.Now;
 
                 // Audit set the audit information foreach record
@@ -88,11 +89,11 @@ namespace MyBoilerPlate.Data
                     if (auditableEntity.State == EntityState.Added)
                     {
                         auditableEntity.Entity.CreatedDate = currentDate;
-                        auditableEntity.Entity.CreatedById = _UserProfile.UserId;
+                        auditableEntity.Entity.CreatedById = userId.Value;
                     }
 
                     auditableEntity.Entity.UpdatedDate = currentDate;
-                    auditableEntity.Entity.UpdatedById = _UserProfile.UserId;
+                    auditableEntity.Entity.UpdatedById = userId;
                 }
             }
 
@@ -106,6 +107,13 @@ namespace MyBoilerPlate.Data
 
             if (auditableEntitySet != null)
             {
+                Guid? userId = null;
+
+                if (_HttpContextAccessor.HttpContext.User.Claims.Any(x => x.Type == "sub"))
+                {
+                    userId = Guid.Parse(_HttpContextAccessor.HttpContext.User.Claims.First(x => x.Type == "sub").Value);
+                }
+
                 DateTime currentDate = DateTime.Now;
 
                 // Audit set the audit information foreach record
@@ -114,11 +122,11 @@ namespace MyBoilerPlate.Data
                     if (auditableEntity.State == EntityState.Added)
                     {
                         auditableEntity.Entity.CreatedDate = currentDate;
-                        auditableEntity.Entity.CreatedById = _UserProfile.UserId;
+                        auditableEntity.Entity.CreatedById = userId.Value;
                     }
 
                     auditableEntity.Entity.UpdatedDate = currentDate;
-                    auditableEntity.Entity.UpdatedById = _UserProfile.UserId;
+                    auditableEntity.Entity.UpdatedById = userId;
                 }
             }
 
